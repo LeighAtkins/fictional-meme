@@ -1,9 +1,73 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-<body>
-  <h1>LEIGH ATKINS</h1>
-  <p>Welcome to my website!</p>
-  <img src="https://content.codecademy.com/articles/github-pages-via-web-app/happy-ice-cream.gif" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Leigh Atkins - Professional Portfolio showcasing skills, projects, and experience">
+  <meta name="author" content="Leigh Atkins">
+  <title>Leigh Atkins - Portfolio</title>
+  
+  <!-- Tailwind CSS -->
+  <link href="./dist/output.css" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body class="bg-gray-50 text-gray-900 font-sans">
+  <!-- Navigation -->
+  <nav id="navbar" class="bg-white shadow-sm fixed w-full top-0 z-50">
+    <!-- Navigation will be implemented in Task 3 -->
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div class="text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-gray-800 mb-4">LEIGH ATKINS</h1>
+        <p class="text-xl md:text-2xl text-gray-600 mb-8">Welcome to my professional portfolio</p>
+        <div class="space-x-4">
+          <a href="#about" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">About Me</a>
+          <a href="#projects" class="inline-block border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">View Projects</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+      <!-- About content will be implemented in Task 5 -->
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-gray-50">
+      <!-- Projects content will be implemented in Task 6 -->
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+      <!-- Contact form will be implemented in Task 7 -->
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <!-- Footer content will be implemented in Task 8 -->
+  </footer>
+
+  <!-- JavaScript for smooth scrolling and interactivity -->
+  <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>

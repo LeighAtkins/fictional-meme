@@ -1,0 +1,39 @@
+{
+  "name": "leigh-atkins-portfolio",
+  "version": "1.0.0",
+  "description": "Professional portfolio website for Leigh Atkins showcasing skills, projects, and experience",
+  "main": "index.html",
+  "scripts": {
+    "dev": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "serve": "python -m http.server 8000",
+    "serve-alt": "npx serve .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeighAtkins/portfolio.git"
+  },
+  "keywords": [
+    "portfolio",
+    "website",
+    "tailwindcss",
+    "vercel",
+    "professional"
+  ],
+  "author": "Leigh Atkins",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/LeighAtkins/portfolio/issues"
+  },
+  "homepage": "https://github.com/LeighAtkins/portfolio#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}

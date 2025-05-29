@@ -1,0 +1,128 @@
+<context>
+# Overview  
+Personal portfolio website for Leigh Atkins showcasing professional skills, projects, and experience. The website will serve as a digital presence for career opportunities, client interactions, and professional networking. Built with modern web technologies and deployed on Vercel with a custom domain through Namecheap URL redirect.
+
+# Core Features  
+- **Landing Page**: Professional hero section with name, title, and brief introduction
+- **About Section**: Detailed biography, skills, and professional background
+- **Projects Portfolio**: Showcase of completed projects with descriptions, technologies used, and live/demo links
+- **Resume/CV Section**: Downloadable resume and detailed experience timeline
+- **Contact Form**: Functional contact form with email integration
+- **Responsive Design**: Mobile-first design that works across all devices
+- **Dark/Light Mode**: Theme toggle for better user experience
+- **Blog Section**: Optional blog for sharing thoughts and technical insights
+- **SEO Optimization**: Meta tags, structured data, and search engine optimization
+
+# User Experience  
+**Primary Users**: Potential employers, clients, collaborators, and professional contacts
+**Key User Flows**:
+1. Landing → About → Projects → Contact
+2. Direct project showcase viewing
+3. Resume download and contact initiation
+4. Blog reading and engagement
+
+**UI/UX Considerations**:
+- Clean, professional aesthetic
+- Fast loading times
+- Intuitive navigation
+- Accessibility compliance
+- Modern design trends
+</context>
+<PRD>
+# Technical Architecture  
+**Frontend Framework**: Static HTML/CSS/JavaScript with Tailwind CSS for styling
+**Hosting Platform**: Vercel for deployment and hosting
+**Domain Management**: Namecheap domain with URL redirect to Vercel deployment
+**Form Handling**: Netlify Forms or Formspree for contact form submissions
+**Performance**: Optimized images, minified CSS/JS, lazy loading
+**Analytics**: Google Analytics for visitor tracking
+**Content Management**: Static content with potential future CMS integration
+
+**Key Components**:
+- Responsive navigation header
+- Hero section with professional photo
+- Project cards with hover effects
+- Contact form with validation
+- Footer with social media links
+
+# Development Roadmap  
+**Phase 1 - MVP Foundation**:
+- Basic HTML structure and Tailwind CSS setup
+- Responsive navigation and hero section
+- About page with basic information
+- Simple project showcase (3-5 projects)
+- Contact form implementation
+- Vercel deployment setup
+
+**Phase 2 - Enhanced Features**:
+- Advanced styling and animations
+- Project filtering and categorization
+- Resume download functionality
+- SEO optimization and meta tags
+- Performance optimization
+- Namecheap domain connection
+
+**Phase 3 - Advanced Features**:
+- Dark/light mode toggle
+- Blog section implementation
+- Advanced contact form with validation
+- Analytics integration
+- Social media integration
+- Portfolio image optimization
+
+**Phase 4 - Polish and Optimization**:
+- Advanced animations and interactions
+- Progressive Web App features
+- Advanced SEO implementation
+- Performance monitoring
+- User feedback integration
+- Content management system integration
+
+# Logical Dependency Chain
+**Foundation First**:
+1. Project setup and Tailwind CSS configuration
+2. Basic HTML structure and responsive layout
+3. Navigation system implementation
+4. Hero section with professional branding
+
+**Content Implementation**:
+5. About section with personal information
+6. Project showcase with basic styling
+7. Contact form with backend integration
+8. Footer and social media links
+
+**Deployment and Domain**:
+9. Vercel deployment configuration
+10. Environment variables and build optimization
+11. Namecheap domain setup and URL redirect
+12. SSL certificate and security headers
+
+**Enhancement and Polish**:
+13. Advanced styling and animations
+14. Performance optimization
+15. SEO implementation
+16. Analytics and monitoring setup
+
+# Risks and Mitigations  
+**Technical Challenges**:
+- Form submission handling → Use reliable third-party service (Formspree/Netlify Forms)
+- Mobile responsiveness → Mobile-first design approach with Tailwind CSS
+- Loading performance → Image optimization and lazy loading implementation
+
+**MVP Scope Management**:
+- Feature creep → Focus on essential portfolio elements first
+- Design complexity → Start with clean, simple design that can be enhanced
+- Content preparation → Gather all necessary content before development begins
+
+**Deployment and Domain Risks**:
+- Vercel deployment issues → Test deployment early and often
+- Domain redirect complexity → Document the exact steps for Namecheap setup
+- SSL and security → Ensure proper HTTPS configuration
+
+# Appendix  
+**Design Inspiration**: Modern portfolio websites with clean aesthetics
+**Technology Stack**: HTML5, CSS3 (Tailwind), JavaScript (ES6+), Vercel, Namecheap
+**Content Requirements**: Professional photos, project descriptions, resume, contact information
+**Performance Goals**: Page load time under 3 seconds, 90+ Lighthouse score
+**Accessibility Goals**: WCAG 2.1 AA compliance, screen reader compatibility
+</PRD> 
