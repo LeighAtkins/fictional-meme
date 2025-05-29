@@ -2,13 +2,13 @@
   "name": "leigh-atkins-portfolio",
   "version": "1.0.0",
   "description": "Professional portfolio website for Leigh Atkins showcasing skills, projects, and experience",
-  "main": "index.html",
+  "main": "index.js",
   "scripts": {
-    "dev": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
-    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
-    "serve": "python -m http.server 8000",
-    "serve-alt": "npx serve .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next export"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   "keywords": [
     "portfolio",
     "website",
+    "nextjs",
     "tailwindcss",
     "vercel",
     "professional"
@@ -30,10 +31,14 @@
   "homepage": "https://github.com/LeighAtkins/portfolio#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.17",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.29",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1"
   },
   "dependencies": {
-    "serve": "^14.2.1"
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }
