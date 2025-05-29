@@ -28,6 +28,8 @@ module.exports = {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
+        'pulse': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'bounce': 'bounce 2s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -38,6 +40,10 @@ module.exports = {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         }
+      },
+      animationDelay: {
+        '2000': '2s',
+        '4000': '4s',
       }
     },
   },
