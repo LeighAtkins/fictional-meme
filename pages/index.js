@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function Home() {
@@ -131,7 +132,7 @@ export default function Home() {
               "jobTitle": "Full-Stack Developer & Software Engineer",
               "description": "Experienced Full-Stack Developer specializing in React, Next.js, Node.js, and modern web technologies.",
               "url": "https://leighatkins.me",
-              "image": "src\images\LEIGH_PRO.jpg",
+              "image": "https://leighatkins.dev/leigh-atkins-photo.jpg",
               "sameAs": [
                 "https://github.com/leighatkins",
                 "https://www.linkedin.com/in/leigh-atkins-0069a731a/",
@@ -310,13 +311,18 @@ export default function Home() {
 
             <div className="text-center px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="animate-fade-in-up animation-delay-500">
-                {/* Enhanced Professional Photo Placeholder */}
+                {/* Professional Photo */}
                 <div className="mb-8 flex justify-center">
                   <div className="relative">
-                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center shadow-2xl ring-4 ring-white ring-opacity-50 transform transition-all duration-500 hover:scale-105 hover:shadow-3xl animate-pulse-subtle">
-                      <svg className="w-16 h-16 md:w-20 md:h-20 text-white transition-transform duration-300 hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                      </svg>
+                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden shadow-2xl ring-4 ring-white ring-opacity-50 transform transition-all duration-500 hover:scale-105 hover:shadow-3xl animate-pulse-subtle">
+                      <Image
+                        src="/leigh-atkins-photo.jpg"
+                        alt="Leigh Atkins - Professional Photo"
+                        width={160}
+                        height={160}
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                        priority
+                      />
                     </div>
                     <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-2 border-white flex items-center justify-center animate-pulse">
                       <div className="w-2 h-2 bg-white rounded-full"></div>
