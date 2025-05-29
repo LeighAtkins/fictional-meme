@@ -1,21 +1,7 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "."
-            }
-        }
-    ],
     "buildCommand": "npm run build",
     "devCommand": "npm run dev",
     "installCommand": "npm install",
-    "framework": null,
-    "functions": {},
-    "redirects": [],
-    "rewrites": [],
     "headers": [
         {
             "source": "/(.*)",
