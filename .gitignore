@@ -27,3 +27,17 @@ node_modules/
 # Task files
 tasks.json
 tasks/ 
+# Next.js
+.next/
+out/
+
+# Deps
+node_modules/
+
+# Env
+.env*
+
+# Misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts

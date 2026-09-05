@@ -7,6 +7,93 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
 
+  // Real projects, ordered by story: visualize → measure → buy → support
+  const projects = [
+    {
+      title: 'OpenPaint',
+      tagline: 'Measure anything from a photo',
+      icon: '📐',
+      gradient: 'from-blue-400 to-purple-600',
+      status: 'Live',
+      badgeColor: 'bg-green-500',
+      description:
+        'Browser drawing and measurement tool for made-to-order furniture: trace a customer photo, label real-world dimensions, and export a dimensioned drawing. Includes AI furniture dimensioning (REMBG silhouette extraction + one-click calibration → dimensioned SVG) and Supabase-backed project save/load.',
+      tech: ['TypeScript', 'Canvas API', 'Supabase', 'Express', 'Vitest'],
+      demo: 'https://sofapaint.vercel.app/',
+      source: 'https://github.com/LeighAtkins/OpenPaint',
+    },
+    {
+      title: 'Sofa Style Visualizer',
+      tagline: 'Reupholster any sofa with AI',
+      icon: '🛋️',
+      gradient: 'from-pink-400 to-purple-600',
+      status: 'Finishing',
+      badgeColor: 'bg-yellow-500',
+      description:
+        'Upload a room photo and a fabric swatch; a two-image Gemini edit reupholsters the sofa while keeping the room\'s lighting and geometry. Before/after compare slider, admin-managed fabric catalog, public gallery, and per-user daily rate limiting.',
+      tech: ['Next.js 16', 'Gemini AI', 'Cloudinary', 'Vercel KV', 'NextAuth'],
+      demo: null,
+      demoNote: 'Demo in final polish',
+      source: 'https://github.com/LeighAtkins/style-check',
+    },
+    {
+      title: 'SupportCopilot',
+      tagline: 'RAG answers for pre-sale questions',
+      icon: '💬',
+      gradient: 'from-emerald-400 to-teal-600',
+      status: 'In Production',
+      badgeColor: 'bg-green-500',
+      description:
+        'AI reply assistant for a support team: scrapes the help center into a LanceDB vector index, drafts grounded replies with GPT-4o-mini, then a second LLM pass injects real product links. Ships as a Flask API and an Electron desktop app with a global clipboard workflow.',
+      tech: ['Python', 'LanceDB', 'GPT-4o-mini', 'Flask', 'Electron'],
+      demo: null,
+      demoNote: 'Walkthrough on request',
+      source: null,
+    },
+    {
+      title: 'threeWood',
+      tagline: 'PS1-style procedural golf',
+      icon: '⛳',
+      gradient: 'from-amber-400 to-orange-600',
+      status: 'Playable',
+      badgeColor: 'bg-yellow-500',
+      description:
+        'Every round is a seeded, hand-paced 9-hole course generated from a shareable seed string — over-water signature holes, doglegs, elevated greens. Club system with strike variants, 3-click swing meter, custom GLSL water, and terrain-aware aim warnings.',
+      tech: ['Three.js', 'GLSL', 'Web Audio', 'simplex-noise', 'Vite'],
+      demo: null,
+      demoNote: 'Deploying soon',
+      source: 'https://github.com/LeighAtkins/threeWood',
+    },
+    {
+      title: 'Background Remover',
+      tagline: 'One-drag cutouts, zero setup',
+      icon: '🖼️',
+      gradient: 'from-cyan-400 to-blue-600',
+      status: 'Docker-ready',
+      badgeColor: 'bg-blue-500',
+      description:
+        'Drag-and-drop background removal for product photos: Node/Express upload UI fronting a Python rembg (U2-Net/ONNX) pipeline, with side-by-side before/after preview. Deploys anywhere with a single docker-compose up — no API keys, no accounts.',
+      tech: ['Node.js', 'Python', 'U2-Net', 'Docker'],
+      demo: null,
+      demoNote: 'Run locally via Docker',
+      source: null,
+    },
+    {
+      title: 'GalacticHoroscope',
+      tagline: 'One horoscope, three interfaces',
+      icon: '🔮',
+      gradient: 'from-violet-400 to-indigo-600',
+      status: 'Live',
+      badgeColor: 'bg-green-500',
+      description:
+        'A zodiac-and-stars app shipped three ways from one TypeScript core: a CLI, a documented Express REST API with Swagger, and a web UI with per-sign 3D models — plus a real Jest suite. Deployed on GitHub Pages.',
+      tech: ['TypeScript', 'Express', 'Three.js', 'Swagger', 'Jest'],
+      demo: 'https://leighatkins.github.io/GalacticHoroscope/',
+      source: 'https://github.com/LeighAtkins/GalacticHoroscope',
+    },
+  ]
+
+
   // Enhanced scroll tracking for navbar and animations
   useEffect(() => {
     const handleScroll = () => {
@@ -347,10 +434,11 @@ export default function Home() {
                     Welcome to my professional portfolio
                   </p>
                   <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-                    Passionate about creating innovative digital solutions that make a difference. 
-                    Specializing in modern web technologies, clean code, and exceptional user experiences.
+                    I build the tools that help people customize and buy physical products online —
+                    AI fabric previews, photo-based measurement, dimensioned drawings, and the support
+                    automation around them. Full-stack engineering with a product&apos;s real workflow in mind.
                   </p>
-                  
+
                   {/* Skills/Technologies Preview */}
                   <div className="flex flex-wrap justify-center gap-3 mb-8 max-w-2xl mx-auto">
                     {['React', 'Next.js', 'Node.js', 'TypeScript', 'Python', 'AWS'].map((skill) => (
@@ -454,8 +542,8 @@ export default function Home() {
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-800 mb-2">50+ Projects Completed</h4>
-                        <p className="text-gray-600">Successfully delivered web applications, APIs, and mobile solutions</p>
+                        <h4 className="text-lg font-semibold text-gray-800 mb-2">Tools in daily production use</h4>
+                        <p className="text-gray-600">AI support automation, measurement tooling, and product visualization — built around real workflows</p>
                       </div>
                     </div>
 
@@ -559,12 +647,12 @@ export default function Home() {
                     <div className="text-gray-600">Years of Experience</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">50+</div>
-                    <div className="text-gray-600">Projects Completed</div>
+                    <div className="text-3xl font-bold text-green-600 mb-2">6</div>
+                    <div className="text-gray-600">Featured Projects Below</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">20+</div>
-                    <div className="text-gray-600">Technologies Mastered</div>
+                    <div className="text-3xl font-bold text-purple-600 mb-2">3</div>
+                    <div className="text-gray-600">AI Pipelines in Production</div>
                   </div>
                 </div>
               </div>
@@ -581,357 +669,97 @@ export default function Home() {
                 </h2>
                 <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mb-6"></div>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  A showcase of my recent work and technical expertise across various technologies and domains
+                  Most of my work answers one question: how do you help someone customize a physical product
+                  online — and buy it with confidence? Visualize it, measure it, preview it, support it.
                 </p>
               </div>
 
-              {/* Projects Grid */}
+                            {/* Projects Grid — data-driven */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                
-                {/* Project Card 1 */}
-                <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 overflow-hidden fade-in-on-scroll opacity-0 translate-y-8 delay-200 hover-glow">
-                  {/* Project Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-blue-400 to-purple-600 overflow-hidden">
-                    <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-500"></div>
-                    <div className="absolute inset-0 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-500">
-                      <div className="text-white text-center">
-                        <svg className="w-16 h-16 mx-auto mb-2 opacity-80 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                        <p className="text-sm font-medium">Portfolio Website</p>
+                {projects.map((project) => (
+                  <div key={project.title} className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
+                    {/* Project Header */}
+                    <div className={`relative h-44 bg-gradient-to-br ${project.gradient} overflow-hidden`}>
+                      <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
+                      <div className="absolute inset-0 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                        <div className="text-white text-center px-4">
+                          <div className="text-5xl mb-2 drop-shadow-lg">{project.icon}</div>
+                          <p className="text-sm font-medium opacity-90">{project.tagline}</p>
+                        </div>
+                      </div>
+                      {/* Status Badge */}
+                      <div className="absolute top-4 right-4">
+                        <span className={`${project.badgeColor} text-white text-xs px-2 py-1 rounded-full font-medium`}>{project.status}</span>
                       </div>
                     </div>
-                    {/* Status Badge */}
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">Live</span>
-                    </div>
-                  </div>
-                  
-                  {/* Project Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-                      Professional Portfolio
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                      A modern, responsive portfolio website built with Next.js and Tailwind CSS. Features smooth animations, mobile-first design, and optimized performance.
-                    </p>
-                    
-                    {/* Technology Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {['Next.js', 'React', 'Tailwind CSS', 'Vercel'].map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md font-medium">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {/* Project Links */}
-                    <div className="flex gap-3">
-                      <a 
-                        href="#" 
-                        className="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Live Demo
-                      </a>
-                      <a 
-                        href="#" 
-                        className="flex-1 border border-blue-600 text-blue-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-600 hover:text-white transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Source Code
-                      </a>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Project Card 2 */}
-                <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
-                  <div className="relative h-48 bg-gradient-to-br from-green-400 to-blue-600 overflow-hidden">
-                    <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <svg className="w-16 h-16 mx-auto mb-2 opacity-80" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <p className="text-sm font-medium">E-Commerce App</p>
-                      </div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full font-medium">In Progress</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors duration-300">
-                      E-Commerce Platform
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                      Full-stack e-commerce solution with user authentication, payment integration, and admin dashboard. Built with modern technologies and best practices.
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {['React', 'Node.js', 'PostgreSQL', 'Stripe API'].map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-md font-medium">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <a 
-                        href="#" 
-                        className="flex-1 bg-green-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Preview
-                      </a>
-                      <a 
-                        href="#" 
-                        className="flex-1 border border-green-600 text-green-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-green-600 hover:text-white transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        GitHub
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                    {/* Project Content */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-600 mb-4 text-sm leading-relaxed">{project.description}</p>
 
-                {/* Project Card 3 */}
-                <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
-                  <div className="relative h-48 bg-gradient-to-br from-purple-400 to-pink-600 overflow-hidden">
-                    <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <svg className="w-16 h-16 mx-auto mb-2 opacity-80" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
-                        </svg>
-                        <p className="text-sm font-medium">API Service</p>
+                      {/* Technology Tags */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tech.map((item) => (
+                          <span key={item} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md font-medium">
+                            {item}
+                          </span>
+                        ))}
                       </div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full font-medium">Completed</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors duration-300">
-                      RESTful API Service
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                      Scalable REST API with comprehensive documentation, authentication, rate limiting, and real-time features. Deployed on cloud infrastructure.
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {['Python', 'FastAPI', 'Docker', 'AWS'].map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-md font-medium">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <a 
-                        href="#" 
-                        className="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        API Docs
-                      </a>
-                      <a 
-                        href="#" 
-                        className="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-purple-600 hover:text-white transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Repository
-                      </a>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Project Card 4 */}
-                <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
-                  <div className="relative h-48 bg-gradient-to-br from-yellow-400 to-orange-600 overflow-hidden">
-                    <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <svg className="w-16 h-16 mx-auto mb-2 opacity-80" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM8.5 16L12 13.5 15.5 16 12 18.5 8.5 16z"/>
-                        </svg>
-                        <p className="text-sm font-medium">Mobile App</p>
+                      {/* Project Links */}
+                      <div className="flex gap-3">
+                        {project.demo ? (
+                          <a
+                            href={project.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors duration-300"
+                          >
+                            Live Demo
+                          </a>
+                        ) : (
+                          <span className="flex-1 bg-gray-100 text-gray-500 text-center py-2 px-4 rounded-lg text-sm font-medium">
+                            {project.demoNote}
+                          </span>
+                        )}
+                        {project.source ? (
+                          <a
+                            href={project.source}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 border border-blue-600 text-blue-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                          >
+                            Source Code
+                          </a>
+                        ) : (
+                          <span className="flex-1 border border-gray-200 text-gray-400 text-center py-2 px-4 rounded-lg text-sm font-medium">
+                            Source on request
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">Beta</span>
-                    </div>
                   </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-orange-600 transition-colors duration-300">
-                      Mobile Task Manager
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                      Cross-platform mobile application for task management with offline capabilities, push notifications, and cloud synchronization.
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {['React Native', 'TypeScript', 'Firebase', 'Redux'].map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-md font-medium">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <a 
-                        href="#" 
-                        className="flex-1 bg-orange-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        TestFlight
-                      </a>
-                      <a 
-                        href="#" 
-                        className="flex-1 border border-orange-600 text-orange-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 hover:text-white transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Code
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project Card 5 */}
-                <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
-                  <div className="relative h-48 bg-gradient-to-br from-teal-400 to-cyan-600 overflow-hidden">
-                    <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <svg className="w-16 h-16 mx-auto mb-2 opacity-80" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <p className="text-sm font-medium">Data Dashboard</p>
-                      </div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-teal-500 text-white text-xs px-2 py-1 rounded-full font-medium">Live</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-teal-600 transition-colors duration-300">
-                      Analytics Dashboard
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                      Real-time analytics dashboard with interactive charts, data visualization, and comprehensive reporting capabilities for business insights.
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {['Vue.js', 'D3.js', 'Python', 'MongoDB'].map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-teal-100 text-teal-800 text-xs rounded-md font-medium">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <a 
-                        href="#" 
-                        className="flex-1 bg-teal-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Live Demo
-                      </a>
-                      <a 
-                        href="#" 
-                        className="flex-1 border border-teal-600 text-teal-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-teal-600 hover:text-white transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        GitHub
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Project Card 6 */}
-                <div className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
-                  <div className="relative h-48 bg-gradient-to-br from-pink-400 to-red-600 overflow-hidden">
-                    <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <svg className="w-16 h-16 mx-auto mb-2 opacity-80" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                        </svg>
-                        <p className="text-sm font-medium">AI Assistant</p>
-                      </div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">Research</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-600 transition-colors duration-300">
-                      AI Chat Assistant
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
-                      Intelligent chatbot powered by machine learning with natural language processing, context awareness, and multi-language support.
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {['Python', 'TensorFlow', 'OpenAI API', 'Flask'].map((tech) => (
-                        <span key={tech} className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-md font-medium">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <a 
-                        href="#" 
-                        className="flex-1 bg-red-600 text-white text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Try Demo
-                      </a>
-                      <a 
-                        href="#" 
-                        className="flex-1 border border-red-600 text-red-600 text-center py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-600 hover:text-white transition-colors duration-300"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        Research
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              {/* Call to Action */}
-              <div className="text-center">
-                <p className="text-lg text-gray-600 mb-6">
-                  Interested in working together or learning more about my projects?
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button 
-                    onClick={() => scrollToSection('contact')}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                  >
-                    Get In Touch
-                  </button>
-                  <a 
-                    href="https://github.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="border-2 border-gray-800 text-gray-800 px-8 py-3 rounded-full hover:bg-gray-800 hover:text-white transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                  >
-                    View All Projects
-                  </a>
-                </div>
+              {/* CTA */}
+              <div className="text-center fade-in-on-scroll opacity-0 translate-y-8 transition-all duration-700">
+                <a
+                  href="https://github.com/leighatkins?tab=repositories"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2 border-gray-800 text-gray-800 px-8 py-3 rounded-full hover:bg-gray-800 hover:text-white transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-block"
+                >
+                  View All Projects
+                </a>
               </div>
             </div>
           </section>
 
-          {/* Enhanced Contact Section with Professional Styling and Animations */}
+{/* Enhanced Contact Section with Professional Styling and Animations */}
           <section id="contact" className="py-20 bg-white relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {/* Section Header */}
@@ -967,20 +795,6 @@ export default function Home() {
                     </div>
 
                     <div className="flex items-center group hover-lift">
-                      <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-all duration-300 group-hover:scale-110">
-                        <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zM14 21h-4v-1h4v1zm1.25-3H8.75V4h6.5v14z"/>
-                        </svg>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold text-gray-800 group-hover:text-green-600 transition-colors duration-300">Phone</h4>
-                        <a href="tel:+1234567890" className="text-gray-600 hover:text-green-600 transition-colors duration-300">
-                          +1 (234) 567-8900
-                        </a>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center group hover-lift">
                       <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-purple-200 transition-all duration-300 group-hover:scale-110">
                         <svg className="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -997,14 +811,14 @@ export default function Home() {
                   <div className="mt-8 pt-8 border-t border-gray-200">
                     <h4 className="text-lg font-semibold text-gray-800 mb-4">Follow Me</h4>
                     <div className="flex space-x-4">
-                      <a href="#" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg" onClick={(e) => e.preventDefault()}>
+                      <a href="https://www.linkedin.com/in/leigh-atkins-0069a731a/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg" aria-label="LinkedIn">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                         </svg>
                       </a>
-                      <a href="#" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-800 hover:text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg" onClick={(e) => e.preventDefault()}>
+                      <a href="https://github.com/leighatkins" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-800 hover:text-white transition-all duration-300 transform hover:scale-110 hover:shadow-lg" aria-label="GitHub">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
                         </svg>
                       </a>
                     </div>
@@ -1013,7 +827,19 @@ export default function Home() {
 
                 {/* Contact Form */}
                 <div>
-                  <form className="space-y-6">
+                  <form
+                    className="space-y-6"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      const data = new FormData(e.currentTarget)
+                      const name = `${data.get('firstName') || ''} ${data.get('lastName') || ''}`.trim()
+                      const subject = encodeURIComponent(`Portfolio contact from ${name}: ${data.get('subject') || 'Inquiry'}`)
+                      const body = encodeURIComponent(
+                        `${data.get('message') || ''}\n\n— ${name} (${data.get('email') || ''})`
+                      )
+                      window.location.href = `mailto:contact@leighatkins.dev?subject=${subject}&body=${body}`
+                    }}
+                  >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div>
                         <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -1121,15 +947,7 @@ export default function Home() {
                       </div>
                       <div className="ml-3 text-sm">
                         <label htmlFor="agreement" className="text-gray-600">
-                          I agree to the{' '}
-                          <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
-                            Privacy Policy
-                          </a>{' '}
-                          and{' '}
-                          <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
-                            Terms of Service
-                          </a>
-                          . *
+                          I agree to be contacted about my inquiry. *
                         </label>
                       </div>
                     </div>
@@ -1243,7 +1061,7 @@ export default function Home() {
                   <span className="text-gray-400 text-sm">Follow me:</span>
                   <div className="flex space-x-4">
                     <a 
-                      href="https://github.com" 
+                      href="https://github.com/leighatkins" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors duration-300 group"
@@ -1255,7 +1073,7 @@ export default function Home() {
                     </a>
                     
                     <a 
-                      href="https://linkedin.com" 
+                      href="https://www.linkedin.com/in/leigh-atkins-0069a731a/" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-colors duration-300 group"
@@ -1267,7 +1085,7 @@ export default function Home() {
                     </a>
                     
                     <a 
-                      href="https://twitter.com" 
+                      href="https://x.com/Lemonator" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-10 h-10 bg-blue-400 hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors duration-300 group"
@@ -1279,9 +1097,11 @@ export default function Home() {
                     </a>
 
                     <a 
-                      href="#" 
+                      href="https://github.com/leighatkins?tab=repositories" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
                       className="w-10 h-10 bg-purple-600 hover:bg-purple-700 rounded-lg flex items-center justify-center transition-colors duration-300 group"
-                      aria-label="Portfolio"
+                      aria-label="All repositories"
                     >
                       <svg className="w-5 h-5 text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -1292,11 +1112,7 @@ export default function Home() {
 
                 {/* Copyright & Legal */}
                 <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-sm text-gray-400">
-                  <span>© 2024 Leigh Atkins. All rights reserved.</span>
-                  <div className="flex space-x-4">
-                    <a href="#" className="hover:text-white transition-colors duration-300">Privacy Policy</a>
-                    <a href="#" className="hover:text-white transition-colors duration-300">Terms of Service</a>
-                  </div>
+                  <span>© {new Date().getFullYear()} Leigh Atkins. All rights reserved.</span>
                 </div>
               </div>
 
