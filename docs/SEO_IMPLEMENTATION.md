@@ -104,7 +104,7 @@ Implemented comprehensive schema.org markup for:
 ### Recommended Testing Tools
 
 1. **Google Search Console**
-   - Submit sitemap: `https://leighatkins.dev/sitemap.xml`
+   - Submit sitemap: `https://itembox.site/sitemap.xml`
    - Monitor indexing status
    - Check for crawl errors
 

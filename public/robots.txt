@@ -1,11 +1,11 @@
 # Robots.txt for Leigh Atkins Portfolio
-# https://leighatkins.dev
+# https://itembox.site
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://leighatkins.dev/sitemap.xml
+Sitemap: https://itembox.site/sitemap.xml
 
 # Block access to sensitive files
 Disallow: /api/

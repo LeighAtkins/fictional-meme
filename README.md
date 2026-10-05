@@ -1,6 +1,6 @@
 # Leigh Atkins — Portfolio
 
-Personal portfolio site: full-stack developer building tools that help people customize and buy physical products online — AI fabric previews, photo-based measurement, dimensioned drawings, and the support automation around them.
+Personal portfolio site for Leigh Atkins, full-stack developer: browser tools around real-world things.
 
 ## Stack
 
@@ -18,10 +18,10 @@ npm run build  # production build
 
 ## Featured projects
 
-Real projects live in [github.com/LeighAtkins](https://github.com/leighatkins?tab=repositories):
+- **SofaPaint** ([OpenPaint](https://github.com/LeighAtkins/OpenPaint)): measured drawings for made-to-order furniture
+- **ReelWalk** ([source](https://github.com/LeighAtkins/ReelWalk)): floor-plan-aware property reels
+- **ThreeWood** ([source](https://github.com/LeighAtkins/threeWood)): seeded 18-hole 3D golf in the browser
 
-- **OpenPaint** — browser measurement & annotation tool with AI furniture dimensioning
-- **Sofa Style Visualizer** — Gemini-powered fabric preview on real room photos
-- **SupportCopilot** — RAG reply assistant (LanceDB + GPT-4o-mini, Electron frontend)
-- **threeWood** — PS1-style procedurally generated golf game (Three.js)
-- **GalacticHoroscope** — zodiac app as CLI + REST API + 3D web UI
+Demo clips live in `public/media/` as silent looping MP4s with JPG posters.
+
+Live at [itembox.site](https://itembox.site).
