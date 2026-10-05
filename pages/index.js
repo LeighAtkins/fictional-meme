@@ -18,20 +18,20 @@ const projects = [
     summary:
       'A sofa cover only fits if the measurements are right, and customers are not draughtsmen. SofaPaint gives them a drawing to follow: pick the guide that matches the sofa, armchair or cushion, or upload a photo, then draw each labelled dimension line and type its value.',
     details:
-      'The finished sheet exports as a PDF measurement report, or goes out as a share link the customer fills in themselves. A Cloudflare Worker handles the AI side: finding the furniture silhouette in a photo and proposing where the dimension lines go.',
+      'The finished sheet exports as a PDF measurement report, or goes out as a share link the customer fills in themselves. For a head start, a customer can upload a photo instead: a segmentation model finds the arms, cushions and back, a Cloudflare Worker turns those parts into labelled measurement lines, and the result opens in the editor to adjust.',
     media: {
       kind: 'landscape',
-      src: '/media/openpaint.mp4',
-      poster: '/media/openpaint.jpg',
-      label: 'Screen recording of SofaPaint: choosing a sofa guide, then drawing and entering two measurements',
-      caption: 'Choosing a sofa guide, then drawing and entering two measurements.',
+      src: '/media/sofapaint-generation.mp4',
+      poster: '/media/sofapaint-generation.jpg',
+      label: 'Screen recording of SofaPaint: a sofa photo is uploaded, eleven measurement lines are placed on it automatically, and the drawing opens in the editor',
+      caption: 'A photo in, eleven measurement lines out, then into the editor to adjust. Shortened; the real run takes about 30 seconds.',
     },
     stack: [
       ['Canvas', 'Fabric.js, TypeScript'],
       ['Build', 'Vite'],
       ['Server', 'Node and Express on Vercel functions'],
       ['Data', 'Supabase (PostgreSQL)'],
-      ['AI', 'Cloudflare Workers'],
+      ['AI', 'YOLO segmentation on Modal, Cloudflare Workers'],
       ['Tests', 'Vitest, Playwright visual regression'],
     ],
     links: [
@@ -176,12 +176,12 @@ export default function Home() {
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:title" content={TITLE} />
         <meta property="og:description" content={DESCRIPTION} />
-        <meta property="og:image" content={`${SITE_URL}/media/openpaint.jpg`} />
+        <meta property="og:image" content={`${SITE_URL}/media/sofapaint-generation.jpg`} />
         <meta property="og:site_name" content="Leigh Atkins" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={TITLE} />
         <meta name="twitter:description" content={DESCRIPTION} />
-        <meta name="twitter:image" content={`${SITE_URL}/media/openpaint.jpg`} />
+        <meta name="twitter:image" content={`${SITE_URL}/media/sofapaint-generation.jpg`} />
 
         <script
           type="application/ld+json"
