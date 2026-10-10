@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
-import ItemIcon from '../components/ItemIcon'
+import dynamic from 'next/dynamic'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ItemBody from '../components/ItemBody'
 import StretchFace from '../components/StretchFace'
 import { SECRETS, useArcade, readJSON, writeJSON } from '../lib/arcade'
 import { profile } from '../lib/data'
 import s from './castle.module.css'
+
+const CastleHall = dynamic(() => import('../components/CastleHall'), { ssr: false })
 
 // A homage to the Super Mario 64 castle: every project hangs on the wall as
 // a painting, and jumping into one opens its course and its stars.
@@ -39,16 +41,30 @@ export default function Castle() {
   const [collected, setCollected] = useState({})
   const [face, setFace] = useState(false)
   const [talk, setTalk] = useState(false)
-  const [focus, setFocus] = useState(0)
+  // The course list starts folded away on phones, where it would cover the hall
+  const [listOpen, setListOpen] = useState(true)
+  useEffect(() => {
+    if (window.matchMedia('(pointer: coarse)').matches) setListOpen(false)
+  }, [])
 
   useEffect(() => {
     setCollected(readJSON('itembox.stars', {}))
   }, [])
 
   const paintings = items.filter((i) => i.kind === 'project' || i.kind === 'side')
+  // Where each painting hangs in the hall: the big frames get the projects
+  const hallOrder = useMemo(
+    () =>
+      ['sofapaint', 'style-check', 'threewood', 'reelwalk', 'supportcopilot', 'galactic']
+        .map((id) => paintings.find((p) => p.id === id))
+        .filter(Boolean)
+        .map((p) => ({ id: p.id, name: p.name, number: paintings.indexOf(p) + 1, poster: p.project?.media.poster, color: canvasColors[p.id] })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [items]
+  )
 
   const enter = (item, index) => {
-    if (jumping) return
+    if (jumping || course) return
     play('page')
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setJumping(item.id)
@@ -86,13 +102,6 @@ export default function Castle() {
         }
         return
       }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-        e.preventDefault()
-        setFocus((f) => (f + (e.key === 'ArrowRight' ? 1 : -1) + paintings.length) % paintings.length)
-        play('move')
-      } else if (e.key === 'Enter') {
-        enter(paintings[focus], focus)
-      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -103,16 +112,6 @@ export default function Castle() {
 
   return (
     <div className={s.castle}>
-      {/* The ripple every painting uses on hover */}
-      <svg width="0" height="0" className={s.defs} aria-hidden="true">
-        <filter id="ripple">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="3">
-            <animate attributeName="baseFrequency" dur="3s" values="0.012 0.03;0.016 0.04;0.012 0.03" repeatCount="indefinite" />
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" scale="14" />
-        </filter>
-      </svg>
-
       <header className={s.hud}>
         <button type="button" className={s.lives} onClick={() => setFace(true)} title="Pull Leigh’s face">
           <img src="/me/face.webp" alt="" className={s.lifeFace} />
@@ -126,49 +125,38 @@ export default function Castle() {
         </p>
       </header>
 
-      <div className={s.hall}>
-        <div className={s.wall}>
-          <h1 className={s.title}>Leigh’s castle</h1>
-          <p className={s.sub}>Jump into a painting to enter a project. Every course has stars to collect.</p>
-
-          <ul className={s.paintings}>
-            {paintings.map((p, i) => {
-              const big = p.kind === 'project'
-              return (
-                <li key={p.id} className={big ? s.bigSlot : s.smallSlot}>
-                  <button
-                    type="button"
-                    className={`${s.frame} ${jumping === p.id ? s.jump : ''} ${i === focus ? s.focused : ''}`}
-                    onClick={() => (setFocus(i), enter(p, i))}
-                    onMouseEnter={() => setFocus(i)}
-                    aria-label={`Course ${i + 1}: ${p.name}. Jump in.`}
-                  >
-                    <span className={s.canvas} style={{ background: canvasColors[p.id] }}>
-                      {p.project ? (
-                        <img src={p.project.media.poster} alt="" className={s.poster} />
-                      ) : (
-                        <ItemIcon name={p.icon} className={s.canvasIcon} />
-                      )}
-                    </span>
-                  </button>
-                  <p className={s.plaque}>
-                    <span>Course {i + 1}</span> {p.name}
-                    {collected[p.id] && <Star className={s.plaqueStar} />}
-                  </p>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-
-        <div className={s.floor}>
-          <div className={s.tiles} aria-hidden="true" />
-          <button type="button" className={s.leigh} onClick={() => (setTalk(true), play('select'))} aria-label="Talk to Leigh">
-            <img src="/me/plumber.webp" alt="" />
-            <span className={s.shadow} />
-          </button>
-        </div>
+      <div className={s.hall3d}>
+        <CastleHall
+          paintings={hallOrder}
+          paused={!!course || face || talk}
+          onEnter={(id) => {
+            const i = paintings.findIndex((p) => p.id === id)
+            if (i >= 0) enter(paintings[i], i)
+          }}
+          onSecret={(id) => findSecret(id, 'Up the stairs: the plain résumé lives behind this door, at /resume.')}
+          onTalk={() => (setTalk(true), play('select'))}
+        />
       </div>
+
+      <div className={s.hint}>
+        <p>
+          <kbd>WASD</kbd> or arrows to run, <kbd>Space</kbd> to jump. Run into a painting to enter it.
+        </p>
+      </div>
+
+      <details className={s.quickList} open={listOpen} onToggle={(e) => setListOpen(e.currentTarget.open)}>
+        <summary>Or jump straight in</summary>
+        <ul>
+          {paintings.map((p, i) => (
+            <li key={p.id}>
+              <button type="button" onClick={() => enter(p, i)}>
+                {i + 1}. {p.name}
+                {collected[p.id] ? ' ★' : ''}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </details>
 
       {talk && (
         <div className={s.dialog} role="dialog" aria-label="Leigh says" onClick={() => setTalk(false)}>

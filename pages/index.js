@@ -2,6 +2,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
 import Shelf from '../components/Shelf'
+import CrtTransition from '../components/CrtTransition'
 import SystemBar, { Toast } from '../components/SystemBar'
 import { ArcadeProvider, readJSON, writeJSON } from '../lib/arcade'
 import { EMAIL, GITHUB, LINKEDIN, SITE_URL, games, profile } from '../lib/data'
@@ -13,6 +14,9 @@ const DESCRIPTION =
   'The portfolio of Leigh Atkins, full-stack developer, as a video-game item box. Pick a game, then use SofaPaint, ReelWalk and ThreeWood from its inventory.'
 
 const loading = () => <div className="fixed inset-0 bg-black" />
+// three.js only runs in the browser
+const LivingRoom = dynamic(() => import('../components/LivingRoom'), { ssr: false })
+
 const screens = {
   hyrule: dynamic(() => import('../themes/hyrule'), { ssr: false, loading }),
   attache: dynamic(() => import('../themes/attache'), { ssr: false, loading }),
@@ -24,6 +28,8 @@ const screens = {
 export default function Home() {
   const [game, setGame] = useState(null)
   const [lastGame, setLastGame] = useState(null)
+  const [noWebGL, setNoWebGL] = useState(false)
+  const [snapshot, setSnapshot] = useState(null)
 
   // ?game=castle opens a game directly, so a link can point at one
   useEffect(() => {
@@ -46,8 +52,14 @@ export default function Home() {
 
   const eject = useCallback(() => {
     sfx(game, 'page')
+    setSnapshot(null)
     setGame(null)
   }, [game])
+
+  const enter = useCallback((id, shot) => {
+    setSnapshot(shot)
+    setGame(id)
+  }, [])
 
   const Screen = game ? screens[game] : null
 
@@ -90,13 +102,17 @@ export default function Home() {
       </Head>
 
       <div className={fontVars}>
-        {Screen ? (
+        {noWebGL ? (
+          !Screen && <Shelf onInsert={setGame} lastGame={lastGame} />
+        ) : (
+          <LivingRoom active={!Screen} onEnter={enter} onFail={() => setNoWebGL(true)} />
+        )}
+        {Screen && (
           <>
             <Screen onEject={eject} />
             <SystemBar game={games.find((g) => g.id === game)} onEject={eject} />
+            {snapshot && <CrtTransition key={snapshot.length + game} src={snapshot} />}
           </>
-        ) : (
-          <Shelf onInsert={setGame} lastGame={lastGame} />
         )}
         <Toast />
       </div>

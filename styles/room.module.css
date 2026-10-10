@@ -1,0 +1,253 @@
+/* The living room: a full-bleed 3D scene with a quiet overlay for words */
+
+.room {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #0b0b18;
+  color: #f1e9da;
+  font-family: var(--f-archivo), system-ui, sans-serif;
+}
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fontProbe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.top {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.8rem) clamp(1rem, 3vw, 2.4rem) 3rem;
+  background: linear-gradient(rgba(8, 8, 20, 0.85), rgba(8, 8, 20, 0));
+  pointer-events: none;
+}
+
+.top > * {
+  pointer-events: auto;
+}
+
+.intro {
+  max-width: 36rem;
+}
+
+.name {
+  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: #f6efe2;
+  text-shadow: 0 0 30px rgba(255, 79, 176, 0.25);
+}
+
+.role {
+  margin-top: 0.7rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  line-height: 1.5;
+  color: #d9d1e6;
+}
+
+.quick {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.3rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+.quickLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #c9c2d9;
+  text-decoration: underline;
+  text-decoration-color: rgba(201, 194, 217, 0.35);
+  text-underline-offset: 4px;
+}
+
+.quickLink:hover {
+  color: #fff;
+  text-decoration-color: #ff4fb0;
+}
+
+.dock {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 2.5rem clamp(1rem, 3vw, 2.4rem) 0.8rem;
+  background: linear-gradient(rgba(8, 8, 20, 0), rgba(8, 8, 20, 0.88) 2.5rem);
+}
+
+.prompt {
+  max-width: 44rem;
+  font-size: 0.95rem;
+  color: #b9b1cc;
+}
+
+.picker {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.pick {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(20, 18, 40, 0.75);
+  text-align: left;
+  transition: border-color 150ms, background 150ms;
+}
+
+.pick:hover,
+.picked {
+  border-color: #ff4fb0;
+  background: rgba(60, 20, 60, 0.75);
+}
+
+.pick:focus-visible,
+.play:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+.pickTitle {
+  font-weight: 700;
+  font-stretch: 110%;
+}
+
+.pickMeta {
+  font-size: 0.78rem;
+  color: #b9b1cc;
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem 1.5rem;
+  margin-top: 0.8rem;
+}
+
+.info p {
+  max-width: 52rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #e3dbcc;
+}
+
+.info strong {
+  color: #fff;
+}
+
+.play {
+  padding: 0.7rem 1.3rem;
+  border-radius: 6px;
+  background: #ff4fb0;
+  color: #1a0612;
+  font-weight: 800;
+  font-stretch: 112%;
+  box-shadow: 0 4px 0 #a3226a;
+}
+
+.play:hover {
+  background: #ff6fc0;
+}
+
+.play:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #a3226a;
+}
+
+.play:disabled,
+.pick:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.foot {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  color: #7d7594;
+}
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #b9b1cc;
+}
+
+@media (max-width: 720px) {
+  .top {
+    flex-direction: column;
+  }
+  .quick {
+    justify-content: flex-start;
+  }
+  .quick .quickLink:last-child {
+    display: none;
+  }
+  .prompt,
+  .foot {
+    display: none;
+  }
+  .info p {
+    display: none;
+  }
+  .name {
+    font-size: 2.1rem;
+  }
+  .role {
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+  }
+  .top {
+    padding-bottom: 1.5rem;
+    gap: 0.4rem;
+  }
+  .dock {
+    padding-top: 1.5rem;
+  }
+  .pick {
+    padding: 0.35rem 0.6rem;
+  }
+  .pickTitle {
+    font-size: 0.9rem;
+  }
+  .info {
+    margin-top: 0.5rem;
+  }
+  .play {
+    width: 100%;
+  }
+}

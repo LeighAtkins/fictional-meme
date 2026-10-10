@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ItemIcon from '../components/ItemIcon'
 import ItemBody from '../components/ItemBody'
@@ -6,6 +7,8 @@ import { useDrag } from '../lib/drag'
 import { EMAIL, GITHUB, profile, skills } from '../lib/data'
 import { setSoundEnabled } from '../lib/sfx'
 import s from './hyrule.module.css'
+
+const HyruleField = dynamic(() => import('../components/HyruleField'), { ssr: false })
 
 // A homage to the Ocarina of Time pause menu: four subscreens on a turning
 // cube, a cursor that pulses, C buttons to equip things to, and a fairy.
@@ -190,10 +193,35 @@ export default function Hyrule() {
   const [gearSel, setGearSel] = useState([0, 0])
   const [medal, setMedal] = useState(0)
   const repos = useRepoCount()
+  // The game starts in the field; Start opens the pause menu over it
+  const [paused, setPaused] = useState(false)
+  const [rupees, setRupeesState] = useState(0)
 
   useEffect(() => {
     setCButtons(readJSON('itembox.hyrule.c', ['sofapaint', 'threewood', 'contact']))
+    setRupeesState(readJSON('itembox.rupees', 0))
   }, [])
+
+  const setRupees = useCallback((n) => {
+    setRupeesState(n)
+    writeJSON('itembox.rupees', n)
+  }, [])
+
+  const togglePause = useCallback(() => {
+    setPaused((p) => !p)
+    play('page')
+  }, [play])
+
+  const openChest = useCallback(
+    (id) => {
+      const item = items.find((i) => i.id === id)
+      if (item) {
+        play('select')
+        setOpen(item)
+      }
+    },
+    [items, play]
+  )
 
   const equip = useCallback(
     (slot, id) => {
@@ -248,12 +276,19 @@ export default function Hyrule() {
         if (e.key === 'Escape' || e.key === 'Backspace') setOpen(null)
         return
       }
-      if (e.key === 'q' || e.key === 'Q' || e.key === '[') return turnTo(-1)
-      if (e.key === 'e' || e.key === 'E' || e.key === ']') return turnTo(1)
+      if (e.key === 'Enter' && !paused) {
+        e.preventDefault()
+        return togglePause()
+      }
+      if ((e.key === 'Escape' || e.key === 'p' || e.key === 'P') && paused) return togglePause()
+      if (e.key === 'p' || e.key === 'P') return togglePause()
       if (['1', '2', '3'].includes(e.key)) {
         const id = cButtons[Number(e.key) - 1]
         return activate(items.find((i) => i.id === id))
       }
+      if (!paused) return
+      if (e.key === 'q' || e.key === 'Q' || e.key === '[') return turnTo(-1)
+      if (e.key === 'e' || e.key === 'E' || e.key === ']') return turnTo(1)
       if (page !== 0) return
       const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]
       if (d) {
@@ -267,7 +302,7 @@ export default function Hyrule() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, page, cursor, ordered, cButtons, items, step, play, turnTo, activate])
+  }, [open, paused, page, cursor, ordered, cButtons, items, step, play, turnTo, activate, togglePause])
 
   const talkToFairy = () => {
     const tip = tips[tipIndex % tips.length]
@@ -306,10 +341,8 @@ export default function Hyrule() {
 
   return (
     <div className={s.world}>
-      <div className={s.field} aria-hidden="true">
-        <div className={s.sun} />
-        <div className={s.hillsFar} />
-        <div className={s.hillsNear} />
+      <div className={`${s.field3d} ${paused ? s.blurred : ''}`}>
+        <HyruleField paused={paused || !!open} onChest={openChest} rupees={rupees} setRupees={setRupees} onSecret={findSecret} />
       </div>
 
       <div className={s.hud}>
@@ -320,9 +353,19 @@ export default function Hyrule() {
             </svg>
           ))}
           <span className={s.magic} />
+          <span className={s.rupees} aria-label={`${rupees} rupees`}>
+            <svg viewBox="0 0 10 18" aria-hidden="true">
+              <path d="M5 0 L10 4 L10 14 L5 18 L0 14 L0 4 Z" fill="#2fd04a" stroke="#0b3a14" strokeWidth="1" />
+              <path d="M5 2 L8 5 L8 13 L5 16 Z" fill="#9dffad" opacity="0.6" />
+            </svg>
+            {String(rupees).padStart(3, '0')}
+          </span>
         </div>
         <div className={s.cGroup}>
-          <span className={s.aButton}>Pause</span>
+          <button type="button" className={s.startButton} onClick={togglePause} aria-pressed={paused}>
+            {paused ? 'Back to the field' : 'Start: items'}
+          </button>
+          <span className={s.aButton}>{paused ? 'Pause' : 'Swing'}</span>
           {cButtons.map((id, i) => {
             const it = items.find((x) => x.id === id)
             return (
@@ -342,6 +385,8 @@ export default function Hyrule() {
         </div>
       </div>
 
+      {paused ? (
+        <>
       <div className={s.stage}>
         <button type="button" className={`${s.tab} ${s.tabL}`} onClick={() => turnTo(-1)}>
           <span className={s.tabKey}>Z</span>
@@ -519,6 +564,17 @@ export default function Hyrule() {
           )}
         </p>
       </div>
+        </>
+      ) : (
+        <div className={s.fieldHint}>
+          <p>
+            <kbd>WASD</kbd> or arrows to run, <kbd>J</kbd> or click to swing, <kbd>Space</kbd> to jump. Open the three chests for Leigh’s projects.
+          </p>
+          <p>
+            <kbd>Enter</kbd> opens the pause menu with everything else.
+          </p>
+        </div>
+      )}
 
       <Fairy onTalk={talkToFairy} />
       {talk && (

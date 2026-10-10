@@ -63,6 +63,8 @@ export default function Attache() {
   const [held, setHeld] = useState(null) // { id, r, x, y, dx, dy, px, py }
   const [examining, setExamining] = useState(null)
   const [merchant, setMerchant] = useState(false)
+  // The command list that pops up beside an item, as in the original
+  const [command, setCommand] = useState(null)
   const caseRef = useRef(null)
   const heldRef = useRef(null)
   heldRef.current = held
@@ -166,6 +168,23 @@ export default function Attache() {
     }
   }, [items, selected, layout, play, notify, findSecret])
 
+  // Organize: repack everything, biggest first, the way the case's own button does
+  const organize = () => {
+    const sorted = [...items].sort((a, b) => b.size[0] * b.size[1] - a.size[0] * a.size[1] || b.size[1] - a.size[1])
+    const next = {}
+    for (const it of sorted) {
+      let spot = null
+      for (let x = 0; x < COLS && !spot; x++)
+        for (let y = 0; y < ROWS && !spot; y++)
+          for (const r of [false, true]) if (!spot && fits(next, items, it.id, x, y, r)) spot = { x, y, r }
+      next[it.id] = spot || layout[it.id]
+    }
+    save(next)
+    setCommand(null)
+    play('select')
+    notify('Organized.')
+  }
+
   const order = useMemo(
     () =>
       items
@@ -180,6 +199,10 @@ export default function Attache() {
         if (e.key === 'Escape') (setExamining(null), setMerchant(false))
         return
       }
+      if (command) {
+        if (e.key === 'Escape' || e.key === 'Backspace') setCommand(null)
+        return
+      }
       if (e.key === 'r' || e.key === 'R') {
         e.preventDefault()
         if (!rotateHeld()) rotateSelected()
@@ -192,14 +215,14 @@ export default function Attache() {
         setSelected(order[(i + dir + order.length) % order.length].id)
         play('move')
       }
-      if (e.key === 'Enter') {
-        const it = items.find((x) => x.id === selected)
-        if (it) (setExamining(it), play('select'))
+      if (e.key === 'Enter' && selected) {
+        setCommand(selected)
+        play('select')
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [examining, merchant, order, selected, items, rotateHeld, rotateSelected, play])
+  }, [examining, merchant, command, order, selected, items, rotateHeld, rotateSelected, play])
 
   const meetMerchant = () => {
     setMerchant(true)
@@ -217,12 +240,17 @@ export default function Attache() {
         <section className={s.caseSide} aria-label="Attaché case">
           <header className={s.header}>
             <h1 className={s.title}>Attaché case</h1>
+            <button type="button" className={s.cmd} onClick={organize}>
+              Organize
+            </button>
             <p className={s.ptas}>
               <span>PTAS</span> Negotiable
             </p>
           </header>
 
           <div className={s.leather}>
+            <span className={s.latch} style={{ left: '22%' }} aria-hidden="true" />
+            <span className={s.latch} style={{ right: '22%' }} aria-hidden="true" />
             <div
               ref={caseRef}
               className={s.case}
@@ -256,7 +284,7 @@ export default function Attache() {
                       // Keyboard activation has no pointer press before it
                       const viaKeyboard = e.detail === 0
                       if (viaKeyboard || (clickIntent.current.examine && !clickIntent.current.dragged)) {
-                        setExamining(item)
+                        setCommand(item.id)
                         play('select')
                       }
                     }}
@@ -267,6 +295,58 @@ export default function Attache() {
                   </button>
                 )
               })}
+
+              {command &&
+                layout[command] &&
+                (() => {
+                  const it = items.find((i) => i.id === command)
+                  const p = layout[command]
+                  const [w] = footprint(it, p.r)
+                  const right = p.x + w <= COLS - 3
+                  const href = it.href || it.project?.links[0]?.href
+                  return (
+                    <ul
+                      className={s.commands}
+                      role="menu"
+                      aria-label={`${it.name} commands`}
+                      style={{
+                        left: right ? `${((p.x + w) / COLS) * 100}%` : undefined,
+                        right: right ? undefined : `${((COLS - p.x) / COLS) * 100}%`,
+                        top: `${(Math.min(p.y, ROWS - 3) / ROWS) * 100}%`,
+                      }}
+                    >
+                      <li>
+                        <button type="button" role="menuitem" autoFocus onClick={() => (setCommand(null), setExamining(it), play('select'))}>
+                          Examine
+                        </button>
+                      </li>
+                      {href && (
+                        <li>
+                          <a
+                            role="menuitem"
+                            href={href}
+                            {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                            onClick={() => setCommand(null)}
+                          >
+                            Use
+                          </a>
+                        </li>
+                      )}
+                      {it.size[0] !== it.size[1] && (
+                        <li>
+                          <button type="button" role="menuitem" onClick={() => (setCommand(null), rotateSelected())}>
+                            Turn
+                          </button>
+                        </li>
+                      )}
+                      <li>
+                        <button type="button" role="menuitem" onClick={() => setCommand(null)}>
+                          Back
+                        </button>
+                      </li>
+                    </ul>
+                  )
+                })()}
 
               {held?.moved && heldItem && (
                 <div
@@ -285,13 +365,19 @@ export default function Attache() {
             </div>
           </div>
           <p className={s.controls}>
-            <kbd>Drag</kbd> move <kbd>R</kbd> or right-click turn <kbd>Enter</kbd> examine <kbd>Arrows</kbd> select
+            <kbd>Drag</kbd> move <kbd>R</kbd> or right-click turn <kbd>Click again</kbd> or <kbd>Enter</kbd> commands
           </p>
         </section>
 
         <aside className={s.side}>
           <div className={s.status}>
-            <img src="/me/agent.webp" alt="Leigh in a dark brown three-piece suit" className={s.agent} />
+            <div className={s.gauge}>
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="46" className={s.gaugeTrack} />
+                <circle cx="50" cy="50" r="46" className={s.gaugeFill} />
+              </svg>
+              <img src="/me/agent.webp" alt="Leigh in a dark brown three-piece suit" className={s.agent} />
+            </div>
             <div className={s.vitals}>
               <p className={s.agentName}>{profile.name}</p>
               <p className={s.agentRole}>{profile.role}</p>

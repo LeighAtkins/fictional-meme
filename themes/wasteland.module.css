@@ -7,19 +7,197 @@
   --bg: #03130a;
   position: fixed;
   inset: 40px 0 0;
-  padding: clamp(0px, 1.6vw, 22px);
-  background:
-    radial-gradient(circle at 12px 12px, #6b6853 0 3px, transparent 4px) 0 0 / 100% 100% no-repeat,
-    linear-gradient(135deg, #46443a, #2a2922 50%, #1d1c17);
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  padding: clamp(0px, 2vw, 28px);
+  overflow: hidden;
   font-family: var(--f-mono), monospace;
   color: var(--g);
+  background:
+    radial-gradient(ellipse at 70% 0%, rgba(255, 230, 170, 0.4), transparent 60%),
+    linear-gradient(#a8946a, #6b5a3e 60%, #3a2e20);
+}
+
+/* The vault-suit sleeve the device is strapped to */
+.device::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: 30%;
+  height: 46%;
+  border-radius: 40%;
+  background:
+    linear-gradient(transparent 44%, #e8c23a 44%, #e8c23a 52%, transparent 52%),
+    linear-gradient(#2c4f96, #1d3770);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.casing {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10rem;
+  gap: 1.1rem;
+  width: min(1320px, 100%);
+  height: 100%;
+  max-height: 880px;
+  padding: clamp(0.6rem, 1.6vw, 1.4rem);
+  border-radius: 34px 70px 70px 34px;
+  background:
+    radial-gradient(circle at 18px 18px, #8a8564 0 4px, transparent 5px),
+    radial-gradient(circle at calc(100% - 18px) 18px, #8a8564 0 4px, transparent 5px),
+    radial-gradient(circle at 18px calc(100% - 18px), #8a8564 0 4px, transparent 5px),
+    radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), #8a8564 0 4px, transparent 5px),
+    linear-gradient(135deg, #6d6946, #4a4730 45%, #34321f);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 230, 0.2), inset 0 -6px 0 rgba(0, 0, 0, 0.35), 0 30px 70px rgba(0, 0, 0, 0.6);
+}
+
+.bezel {
+  min-height: 0;
+  min-width: 0;
+  padding: clamp(6px, 1vw, 14px);
+  border-radius: 30px;
+  background: linear-gradient(#26251b, #15140e);
+  box-shadow: inset 0 0 0 2px #0b0a07, inset 0 6px 14px rgba(0, 0, 0, 0.8);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.8rem 0.4rem;
+}
+
+.brand {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: #d9d2a8;
+  text-shadow: 0 1px 0 #000;
+}
+
+.knobWrap {
+  position: relative;
+  width: 8.5rem;
+  height: 8.5rem;
+}
+
+.knob {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 4.6rem;
+  height: 4.6rem;
+  margin: -2.3rem 0 0 -2.3rem;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 46%, #e9e3c4 46%, #e9e3c4 54%, transparent 54%) 0 0 / 100% 45% no-repeat,
+    repeating-conic-gradient(#3a382a 0 6deg, #2a2920 6deg 12deg);
+  box-shadow: 0 4px 0 #15140e, inset 0 0 0 3px #4d4a36;
+  transition: transform 300ms cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.knobLabel {
+  position: absolute;
+  font-size: 0.75rem;
+  color: #c9c29a;
+}
+
+.knobLabel:hover,
+.klOn {
+  color: var(--g);
+  text-shadow: 0 0 6px var(--g);
+}
+
+.kl0 {
+  left: 0;
+  top: 1.6rem;
+}
+
+.kl1 {
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.kl2 {
+  right: 0;
+  top: 1.6rem;
+}
+
+.talkBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ffd27a, #e08a1e 55%, #8a4a0a);
+  box-shadow: 0 5px 0 #3a2208, inset 0 0 0 4px rgba(0, 0, 0, 0.25), 0 0 24px rgba(255, 170, 60, 0.35);
+  color: #2a1604;
+  font-size: 0.85rem;
+  line-height: 1.1;
+  text-align: center;
+  font-weight: 700;
+}
+
+.talkBtn small {
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.talkBtn:hover {
+  filter: brightness(1.1);
+}
+
+.talkBtn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #3a2208;
+}
+
+.radioDial {
+  position: relative;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: repeating-conic-gradient(#3a382a 0 10deg, #2a2920 10deg 20deg);
+  box-shadow: 0 3px 0 #15140e;
+}
+
+.radioDial span {
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  width: 3px;
+  height: 40%;
+  margin-left: -1.5px;
+  background: #e9e3c4;
+  transform-origin: 50% 125%;
+  transition: transform 400ms;
+}
+
+.vents {
+  flex: 1;
+  width: 70%;
+  min-height: 3rem;
+  background: repeating-linear-gradient(#1c1b13 0 4px, transparent 4px 10px);
+  border-radius: 6px;
+  opacity: 0.7;
+}
+
+.inlineLink {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .screen {
   position: relative;
   height: 100%;
   overflow: hidden;
-  border-radius: clamp(0px, 2vw, 28px);
+  border-radius: 22px;
   background: radial-gradient(ellipse at 50% 45%, #062a15, var(--bg) 70%, #010804);
   box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.85), inset 0 0 0 2px #12110d;
   text-shadow: 0 0 6px rgba(65, 245, 147, 0.55);
@@ -531,6 +709,37 @@
 }
 
 @media (max-width: 760px) {
+  .casing {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    border-radius: 24px;
+  }
+  .controls {
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0;
+    gap: 0.6rem;
+  }
+  .brand,
+  .vents,
+  .radioDial {
+    display: none;
+  }
+  .knobWrap {
+    width: 7rem;
+    height: 5.5rem;
+  }
+  .knob {
+    width: 3.2rem;
+    height: 3.2rem;
+    margin: -1.6rem 0 0 -1.6rem;
+    top: 64%;
+  }
+  .talkBtn {
+    width: 4.6rem;
+    height: 4.6rem;
+    font-size: 0.72rem;
+  }
   .top {
     grid-template-columns: 1fr;
     gap: 0.4rem;

@@ -525,3 +525,77 @@
     filter: none;
   }
 }
+
+/* The walkable hall */
+.hall3d {
+  position: fixed;
+  inset: 40px 0 0;
+}
+
+.castle .hud {
+  position: fixed;
+  top: 40px;
+  left: 0;
+  right: 0;
+}
+
+.hint {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  z-index: 5;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  background: rgba(10, 10, 20, 0.6);
+  font-size: 0.9rem;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hint kbd {
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-family: inherit;
+  font-size: 0.8rem;
+}
+
+.quickList {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 5;
+  padding: 0.6rem 0.8rem;
+  border-radius: 12px;
+  background: rgba(10, 10, 20, 0.6);
+  font-size: 0.85rem;
+}
+
+.quickList summary {
+  color: #ffd23a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quickList button {
+  padding: 0.1rem 0;
+  text-align: left;
+}
+
+.quickList button:hover,
+.quickList button:focus-visible {
+  color: #ffd23a;
+  outline: none;
+}
+
+@media (pointer: coarse) {
+  .hint {
+    display: none;
+  }
+  .quickList {
+    top: calc(40px + 4rem);
+    bottom: auto;
+  }
+}

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import Elevator from '../components/Elevator'
 import ItemIcon from '../components/ItemIcon'
 import ItemBody from '../components/ItemBody'
 import { useArcade } from '../lib/arcade'
@@ -20,7 +21,9 @@ const powerNames = {
 const TABS = ['Dossier', 'Powers', 'Research']
 
 export default function Normandy({ onEject }) {
-  const { items, play, findSecret } = useArcade()
+  const { items, play, findSecret, sound } = useArcade()
+  // Every visit starts in the elevator
+  const [phase, setPhase] = useState('elevator')
   const [tab, setTab] = useState(2)
   const [research, setResearch] = useState('sofapaint')
   const [interrupt, setInterrupt] = useState(false)
@@ -31,13 +34,17 @@ export default function Normandy({ onEject }) {
 
   // Once per visit, a Paragon interrupt flashes up for a few seconds
   useEffect(() => {
+    if (phase !== 'squad') return
     const show = setTimeout(() => setInterrupt(true), 9000)
     const hide = setTimeout(() => setInterrupt(false), 15000)
     return () => {
       clearTimeout(show)
       clearTimeout(hide)
     }
-  }, [])
+  }, [phase])
+
+  const arrive = useCallback(() => setPhase('squad'), [])
+  const rodeAll = useCallback(() => findSecret('elevator', 'You heard the whole bulletin.'), [findSecret])
 
   const go = (t) => {
     setTab(t)
@@ -73,8 +80,12 @@ export default function Normandy({ onEject }) {
     return () => window.removeEventListener('keydown', onKey)
   })
 
+  if (phase === 'elevator') return <Elevator sound={sound} onArrive={arrive} onSecret={rodeAll} />
+
   return (
     <div className={s.bridge}>
+      <div className={s.doorsL} aria-hidden="true" />
+      <div className={s.doorsR} aria-hidden="true" />
       <div className={s.stars} aria-hidden="true" />
       <div className={s.layout}>
         <section className={s.holoCol} aria-label="Squad member">

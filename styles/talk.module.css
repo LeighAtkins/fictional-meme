@@ -1,0 +1,152 @@
+/* Face to face in the wasteland: dusty sky, corrugated metal, green dialogue */
+
+.scene {
+  position: fixed;
+  inset: 40px 0 0;
+  z-index: 25;
+  overflow: hidden;
+  font-family: var(--f-mono), monospace;
+  color: #41f593;
+  background: #2b2418;
+  animation: zoom 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes zoom {
+  from {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 70% 10%, rgba(255, 230, 170, 0.55), transparent 50%),
+    linear-gradient(#c9b07a, #8a7450 55%, #4a3a26);
+}
+
+.shack {
+  position: absolute;
+  inset: 18% -5% 0 45%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 6px, rgba(255, 255, 255, 0.05) 6px 14px),
+    linear-gradient(160deg, #7a4a2a, #5a3a24 40%, #3a2a1a);
+  clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+  filter: saturate(0.8);
+}
+
+.leigh {
+  position: absolute;
+  left: 50%;
+  bottom: -26%;
+  height: 112%;
+  transform: translateX(-50%);
+  filter: sepia(0.25) saturate(0.85) contrast(1.05) brightness(0.95) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+  transform-origin: 50% 100%;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.talking {
+  animation: breathe 4s ease-in-out infinite, talk 260ms ease-in-out infinite alternate;
+}
+
+@keyframes breathe {
+  50% {
+    transform: translateX(-50%) scale(1.006);
+  }
+}
+
+@keyframes talk {
+  to {
+    translate: 0 -2px;
+  }
+}
+
+/* Dusty orange grade over everything, the way the wasteland looks */
+.grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 50%, rgba(20, 12, 4, 0.65)),
+    linear-gradient(rgba(255, 180, 90, 0.08), rgba(255, 180, 90, 0.08));
+  mix-blend-mode: multiply;
+}
+
+.top {
+  position: absolute;
+  inset: 0 0 auto;
+  padding: 1.2rem max(4vw, calc(50% - 26rem)) 2.6rem;
+  background: linear-gradient(rgba(5, 8, 4, 0.85), rgba(5, 8, 4, 0.6) 70%, transparent);
+  text-align: center;
+  text-shadow: 0 0 6px rgba(65, 245, 147, 0.6), 0 2px 3px #000;
+}
+
+.name {
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+
+.say {
+  margin-top: 0.4rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.rest {
+  visibility: hidden;
+}
+
+.check {
+  color: #c8ffd8;
+}
+
+.options {
+  position: absolute;
+  left: 50%;
+  bottom: 1.2rem;
+  transform: translateX(-50%);
+  width: min(52rem, 94vw);
+  padding: 0.8rem 1rem;
+  background: rgba(3, 19, 10, 0.88);
+  border: 1px solid rgba(65, 245, 147, 0.5);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  text-shadow: 0 0 5px rgba(65, 245, 147, 0.5);
+}
+
+.option:hover,
+.option:focus-visible {
+  background: #41f593;
+  color: #03130a;
+  text-shadow: none;
+  outline: none;
+}
+
+.num {
+  opacity: 0.7;
+}
+
+@media (max-width: 760px) {
+  .leigh {
+    height: 80%;
+    bottom: 22%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene,
+  .leigh,
+  .talking {
+    animation: none;
+  }
+}
