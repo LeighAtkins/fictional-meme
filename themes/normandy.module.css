@@ -367,7 +367,8 @@
   align-items: center;
   padding-bottom: 0.8rem;
   pointer-events: none;
-  background: linear-gradient(transparent, rgba(2, 4, 8, 0.92) 40%);
+  padding-top: 2.5rem;
+  background: linear-gradient(transparent, rgba(2, 4, 8, 0.97) 2.5rem);
 }
 
 .convo > * {

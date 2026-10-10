@@ -365,6 +365,10 @@
 }
 
 .turntable {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: min(60vh, 26rem);
   display: grid;
   place-items: center;
   perspective: 600px;

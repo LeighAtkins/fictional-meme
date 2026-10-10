@@ -472,6 +472,10 @@
 }
 
 .skull {
+  display: block;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0 auto 0.2rem;
   color: #fff;
 }
 

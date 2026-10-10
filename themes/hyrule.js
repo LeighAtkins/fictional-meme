@@ -580,7 +580,13 @@ function DungeonMap({ d }) {
             style={{ left: `${(r.x / W) * 100}%`, top: `${(r.y / H) * 100}%`, width: `${100 / W}%`, height: `${100 / H}%` }}
           >
             <span>
-              {r.boss && <span className={s.skull} aria-label="Boss room">☠ </span>}
+              {r.boss && (
+                <svg viewBox="0 0 20 20" className={s.skull} role="img" aria-label="Boss room">
+                  <path d="M10 2C5.6 2 3 5 3 8.6c0 2.2 1 3.7 2.4 4.6V16h2v-1.6h1.6V16h2v-1.6h1.6V16h2v-2.8C16 12.3 17 10.8 17 8.6 17 5 14.4 2 10 2Z" fill="currentColor" />
+                  <circle cx="7.3" cy="9" r="1.8" fill="#6b1c1c" />
+                  <circle cx="12.7" cy="9" r="1.8" fill="#6b1c1c" />
+                </svg>
+              )}
               {r.label}
             </span>
           </div>

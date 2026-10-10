@@ -468,7 +468,7 @@
   inset: 0;
   z-index: 4;
   padding: 2rem clamp(1rem, 4vw, 3rem);
-  background: rgba(3, 19, 10, 0.92);
+  background: radial-gradient(ellipse at 50% 45%, #062a15, var(--bg) 70%, #010804);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
