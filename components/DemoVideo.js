@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 // Silent looping screen recording that behaves like a GIF: plays while on
 // screen, pauses when scrolled away, and stays still for reduced-motion users.
-export default function DemoVideo({ src, poster, label, width, height, className = '' }) {
+export default function DemoVideo({ src, poster, label, width, height, className = '', framed = true }) {
   const videoRef = useRef(null)
   const [playing, setPlaying] = useState(false)
   const stopped = useRef(false)
@@ -41,7 +41,7 @@ export default function DemoVideo({ src, poster, label, width, height, className
   }
 
   return (
-    <div className={`relative overflow-hidden rounded border border-ink bg-sheet ${className}`}>
+    <div className={`relative overflow-hidden ${framed ? 'rounded border border-ink bg-sheet' : 'ib-video'} ${className}`}>
       <video
         ref={videoRef}
         src={src}
@@ -60,7 +60,7 @@ export default function DemoVideo({ src, poster, label, width, height, className
       <button
         type="button"
         onClick={toggle}
-        className="absolute bottom-2 right-2 rounded bg-ink/85 px-2.5 py-1 font-label text-sm font-medium text-paper hover:bg-ink"
+        className={framed ? 'absolute bottom-2 right-2 rounded bg-ink/85 px-2.5 py-1 font-label text-sm font-medium text-paper hover:bg-ink' : 'ib-play'}
       >
         {playing ? 'Pause' : 'Play'}
       </button>

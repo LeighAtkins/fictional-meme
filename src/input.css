@@ -91,3 +91,66 @@
     animation: none;
   }
 }
+
+/* Shared layout for "use item" content; each game supplies colour and type */
+.ib-media {
+  margin: 0 0 1rem;
+}
+.ib-pair {
+  max-width: 30rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.ib-still {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.ib-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ib-play {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+}
+.ib-caption {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+.ib > p + p,
+.ib > p + dl,
+.ib > dl + p {
+  margin-top: 0.8rem;
+}
+.ib-stack > div {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+.ib-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+}
+
+.toast-in {
+  animation: toast-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+}
