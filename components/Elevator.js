@@ -9,7 +9,7 @@ const bulletins = [
   {
     tag: 'Top story',
     image: '/me/leigh.webp',
-    text: 'Good evening, Citadel. Our top story: a full-stack developer named Leigh Atkins has been seen building browser tools around real-world things.',
+    text: 'Good evening, Citadel. Our top story: a full-stack developer named Leigh Atkins has been seen building tools around real-world things.',
   },
   {
     tag: 'Technology',
@@ -17,14 +17,29 @@ const bulletins = [
     text: 'SofaPaint lets customers measure their own sofas. A segmentation model on Modal finds the arms and cushions, and a Cloudflare Worker turns them into labelled measurement lines.',
   },
   {
+    tag: 'Manufacturing',
+    image: '/media/sofapaint-desktop-poster.jpg',
+    text: 'Its desktop sibling, built in Rust with Tauri, reads the numbers back off photos and PDFs and checks the cushions fit before any fabric is cut.',
+  },
+  {
     tag: 'Housing',
-    image: '/media/reelwalk.jpg',
-    text: 'On the property beat, ReelWalk turns listing photos into Reels with a floor plan that follows the camera. Renders queue on SQS and run on Kubernetes.',
+    image: '/media/reelwalk-poster.jpg',
+    text: 'On the property beat, ReelWalk lets agents cut listing Reels on a phone. Exports render on Fargate from the same composition the editor previews.',
+  },
+  {
+    tag: 'Logistics',
+    image: '/media/handoff-tracker-poster.jpg',
+    text: 'Parcels lost between carriers? Handoff Tracker follows them across the handoff from 4PX to Sagawa and flags the ones that go quiet.',
+  },
+  {
+    tag: 'Education',
+    image: '/media/tslock-poster.jpg',
+    text: 'TSLock teaches TypeScript with challenges that only pass when the code runs and the types match a contract.',
   },
   {
     tag: 'Sport',
-    image: '/media/threewood.jpg',
-    text: 'And in sport, ThreeWood grows a new eighteen-hole golf course from every seed. Pundits call the greens cruel, but deterministic.',
+    image: '/media/threewood-poster.jpg',
+    text: 'And in sport, ThreeWood grows a new eighteen-hole course from every seed, for up to four phones at once. Pundits call the greens cruel, but deterministic.',
   },
   {
     tag: 'Classifieds',
@@ -33,7 +48,7 @@ const bulletins = [
   },
 ]
 
-const SEGMENT = 7000
+const SEGMENT = 6200
 
 function useCityLights() {
   return useMemo(() => {
@@ -137,7 +152,7 @@ export default function Elevator({ sound, onArrive, onSecret }) {
           </span>
         </div>
         <figcaption className={s.ticker}>
-          <span>Citadel Broadcast Network · Leigh Atkins: full-stack developer, open to new roles · SofaPaint · ReelWalk · ThreeWood ·</span>
+          <span>Citadel Broadcast Network · Leigh Atkins: full-stack developer, open to new roles · SofaPaint · SofaPaint Desktop · ReelWalk · Handoff Tracker · TSLock · ThreeWood ·</span>
         </figcaption>
       </figure>
 

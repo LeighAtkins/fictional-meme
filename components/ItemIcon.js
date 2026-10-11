@@ -176,6 +176,48 @@ const icons = {
       </>
     ),
   },
+  monitor: {
+    box: [64, 64],
+    body: (
+      <>
+        <rect x="26" y="46" width="12" height="9" fill="#9aa3ad" stroke={INK} strokeWidth="2" />
+        <rect x="16" y="54" width="32" height="6" rx="2" fill="#c3cad2" stroke={INK} strokeWidth="2" />
+        <rect x="4" y="6" width="56" height="42" rx="4" fill="#2b3240" stroke={INK} strokeWidth="2.5" />
+        <rect x="8" y="10" width="48" height="34" rx="1" fill="#f3f1ea" />
+        <path d="M14 34 V26 C14 22 17 21 20 21 H44 C47 21 50 22 50 26 V34 Z" fill="#c9845a" stroke={INK} strokeWidth="1.5" />
+        <rect x="18" y="27" width="28" height="7" fill="#e3a77c" />
+        <path d="M14 38 H50" stroke="#c43d3a" strokeWidth="2" />
+        <path d="M14 35 V41 M50 35 V41" stroke="#c43d3a" strokeWidth="2" />
+        <rect x="26" y="36" width="12" height="5" rx="2" fill="#fff" stroke="#c43d3a" strokeWidth="1" />
+      </>
+    ),
+  },
+  parcel: {
+    box: [64, 64],
+    body: (
+      <>
+        <path d="M8 22 L32 12 L56 22 L56 50 L32 60 L8 50 Z" fill="#c8955a" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M8 22 L32 32 L56 22 M32 32 V60" fill="none" stroke={INK} strokeWidth="2" strokeLinejoin="round" />
+        <path d="M8 22 L32 32 L32 60 L8 50 Z" fill="#b07d46" />
+        <path d="M20 17 L44 27 V35" stroke="#e8d3a0" strokeWidth="4" fill="none" />
+        <rect x="36" y="38" width="15" height="10" rx="1" fill="#f4f1e8" stroke={INK} strokeWidth="1.5" transform="skewY(-22)" />
+        <path d="M2 8 H18 M12 3 L18 8 L12 13" stroke="#2f7cff" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M46 6 H62 M56 1 L62 6 L56 11" stroke="#e8382e" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  lock: {
+    box: [32, 64],
+    body: (
+      <>
+        <path d="M8 30 V20 C8 12 12 8 16 8 C20 8 24 12 24 20 V30" fill="none" stroke={INK} strokeWidth="6" strokeLinecap="round" />
+        <path d="M8 30 V20 C8 12 12 8 16 8 C20 8 24 12 24 20 V30" fill="none" stroke="#c9ced3" strokeWidth="3.5" strokeLinecap="round" />
+        <rect x="3" y="28" width="26" height="30" rx="4" fill="#2f74c0" stroke={INK} strokeWidth="2.5" />
+        <text x="16" y="49" textAnchor="middle" fontSize="12" fontWeight="800" fill="#ffffff" fontFamily="sans-serif">TS</text>
+        <rect x="6" y="31" width="20" height="3" rx="1.5" fill="rgba(255,255,255,0.3)" />
+      </>
+    ),
+  },
   duck: {
     box: [32, 32],
     body: (

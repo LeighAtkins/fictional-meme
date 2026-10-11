@@ -102,6 +102,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
 }
+.ib-second {
+  margin-top: 0.6rem;
+  max-width: 70%;
+}
 .ib-still {
   display: block;
   width: 100%;

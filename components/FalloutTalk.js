@@ -15,20 +15,32 @@ const lines = {
     options: ['work', 'stack', 'back'],
   },
   work: {
-    say: 'Three things, mostly. Which one?',
-    options: ['sofapaint', 'reelwalk', 'threewood', 'back'],
+    say: 'Six things on the go. Which one?',
+    options: ['sofapaint', 'reelwalk', 'threewood', 'sofapaint-desktop', 'handoff-tracker', 'tslock', 'back'],
   },
   sofapaint: {
     say: 'SofaPaint. People upload a photo of a sofa, a YOLO model on Modal finds the arms and cushions, and a Cloudflare Worker turns them into labelled measurement lines. Then a human checks them, because somebody is going to cut fabric.',
-    options: ['show:sofapaint', 'reelwalk', 'threewood', 'back'],
+    options: ['show:sofapaint', 'sofapaint-desktop', 'work', 'back'],
   },
   reelwalk: {
-    say: 'ReelWalk turns listing photos and 360s into Instagram Reels with a floor plan that follows the camera. The preview and the export share one Remotion composition, and renders run on SQS and Kubernetes.',
-    options: ['show:reelwalk', 'sofapaint', 'threewood', 'back'],
+    say: 'ReelWalk is a Reels editor for estate agents, built for the phone. The preview and the export share one Remotion composition, and exports go through an outbox into SQS and render on Fargate. It’s live at reelwalking.com.',
+    options: ['show:reelwalk', 'threewood', 'work', 'back'],
   },
   threewood: {
-    say: 'ThreeWood grows an 18-hole golf course from a seed. Same seed, same course, on any phone. One deterministic physics model runs the shot, the aim line and the test bot.',
-    options: ['show:threewood', 'sofapaint', 'reelwalk', 'back'],
+    say: 'ThreeWood grows an 18-hole golf course from a seed, so a link gives a friend the same holes. Up to four phones can play together over WebRTC, and there’s fishing if you hit it in the water.',
+    options: ['show:threewood', 'reelwalk', 'work', 'back'],
+  },
+  'sofapaint-desktop': {
+    say: 'SofaPaint Desktop is a Tauri app with a Rust core. It reads measurements off photos and PDFs with the platform’s OCR, then checks whether the cushions actually fit between the arms before anyone cuts fabric.',
+    options: ['show:sofapaint-desktop', 'sofapaint', 'work', 'back'],
+  },
+  'handoff-tracker': {
+    say: 'Handoff Tracker follows a parcel when 4PX hands it to Sagawa under a new tracking number, and flags it when it goes quiet. The rules live in a pure TypeScript domain package, and every change is audited.',
+    options: ['show:handoff-tracker', 'tslock', 'work', 'back'],
+  },
+  tslock: {
+    say: 'TSLock teaches TypeScript with 24 challenges. Your code only passes when it runs correctly and its types satisfy a contract that gets rewritten before every run, so you can’t cheat it.',
+    options: ['show:tslock', 'handoff-tracker', 'work', 'back'],
   },
   stack: {
     say: 'TypeScript, front to back. React and Next.js, Canvas and Three.js in the browser. Node, PostgreSQL, queues and workers behind it, with Docker and Kubernetes when it needs them.',
@@ -66,6 +78,12 @@ const prompts = {
   'show:sofapaint': 'Show me. [Open the Pip-Boy entry]',
   'show:reelwalk': 'Show me. [Open the Pip-Boy entry]',
   'show:threewood': 'Show me. [Open the Pip-Boy entry]',
+  'show:sofapaint-desktop': 'Show me. [Open the Pip-Boy entry]',
+  'show:handoff-tracker': 'Show me. [Open the Pip-Boy entry]',
+  'show:tslock': 'Show me. [Open the Pip-Boy entry]',
+  'sofapaint-desktop': 'Tell me about SofaPaint Desktop.',
+  'handoff-tracker': 'Tell me about Handoff Tracker.',
+  tslock: 'Tell me about TSLock.',
 }
 
 export default function FalloutTalk({ onClose, onShow, onSecret, play }) {

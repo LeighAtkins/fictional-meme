@@ -4,135 +4,31 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import DemoVideo from '../components/DemoVideo'
 import { DimensionH, DimensionV } from '../components/Dimension'
+import { EMAIL, SITE_URL, items } from '../lib/data'
 
-const SITE_URL = 'https://itembox.site'
-const EMAIL = 'hello@itembox.site'
 const TITLE = 'Leigh Atkins, full-stack developer: résumé'
 const DESCRIPTION =
-  'Leigh Atkins builds browser tools around real-world things: SofaPaint for measured furniture drawings, ReelWalk for floor-plan-aware property reels, and ThreeWood, a seeded 3D golf game.'
+  'Leigh Atkins builds tools around real-world things: SofaPaint and SofaPaint Desktop for made-to-measure sofa covers, ReelWalk for property Reels, Handoff Tracker for parcels between carriers, TSLock for learning TypeScript, and ThreeWood, a seeded 3D golf game.'
 
-const projects = [
-  {
-    id: 'sofapaint',
-    name: 'SofaPaint',
-    tagline: 'Measured drawings for made-to-order furniture',
-    summary:
-      'A sofa cover only fits if the measurements are right, and customers are not draughtsmen. SofaPaint gives them a drawing to follow: pick the guide that matches the sofa, armchair or cushion, or upload a photo, then draw each labelled dimension line and type its value.',
-    details:
-      'The finished sheet exports as a PDF measurement report, or goes out as a share link the customer fills in themselves. For a head start, a customer can upload a photo instead: a segmentation model finds the arms, cushions and back, a Cloudflare Worker turns those parts into labelled measurement lines, and the result opens in the editor to adjust.',
-    media: {
-      kind: 'landscape',
-      src: '/media/sofapaint-generation.mp4',
-      poster: '/media/sofapaint-generation.jpg',
-      label: 'Screen recording of SofaPaint: a sofa photo is uploaded, eleven measurement lines are placed on it automatically, and the drawing opens in the editor',
-      caption: 'A photo in, eleven measurement lines out, then into the editor to adjust. Shortened; the real run takes about 30 seconds.',
-    },
-    stack: [
-      ['Canvas', 'Fabric.js, TypeScript'],
-      ['Build', 'Vite'],
-      ['Server', 'Node and Express on Vercel functions'],
-      ['Data', 'Supabase (PostgreSQL)'],
-      ['AI', 'YOLO segmentation on Modal, Cloudflare Workers'],
-      ['Tests', 'Vitest, Playwright visual regression'],
-    ],
-    links: [
-      { label: 'Open SofaPaint', href: 'https://sofapaint.vercel.app/' },
-      { label: 'Source on GitHub', href: 'https://github.com/LeighAtkins/OpenPaint' },
-    ],
-  },
-  {
-    id: 'reelwalk',
-    name: 'ReelWalk',
-    tagline: 'Property reels that know the floor plan',
-    summary:
-      'A phone-first editor that turns listing photos, 360 photos and walkthrough video into a 1080×1920 Instagram Reel. A marker on the floor plan follows the camera from room to room, so a viewer always knows where they are in the house.',
-    details:
-      'One tap builds a full tour from a set of 360 photos, walking through the doorways in a single move. The same tour can be recut for five kinds of buyer, each with its own music, pace and captions. The preview and the export share one Remotion composition, so what you see in the editor is what the render worker produces.',
-    media: {
-      kind: 'portrait',
-      src: '/media/reelwalk.mp4',
-      poster: '/media/reelwalk.jpg',
-      label: 'An exported ReelWalk reel: a camera sweep through a home with a floor plan marker and room names',
-      caption: 'An exported reel, and the timeline editor that made it.',
-      still: '/media/reelwalk-editor.jpg',
-      stillAlt: 'ReelWalk timeline editor on a phone, showing the reel preview, clip timeline and room name captions',
-    },
-    stack: [
-      ['Web', 'Next.js 16, React 19, Server Actions'],
-      ['Video', 'Remotion, headless Chrome, WebCodecs'],
-      ['Data', 'PostgreSQL, Prisma 7'],
-      ['Jobs', 'SQS with a dead-letter queue, S3'],
-      ['Runtime', 'Docker, Kubernetes, Helm'],
-      ['Tests', 'Vitest, Playwright'],
-    ],
-    links: [{ label: 'Source on GitHub', href: 'https://github.com/LeighAtkins/ReelWalk' }],
-    note: 'No hosted demo yet. The whole stack runs locally with one Docker Compose command.',
-  },
-  {
-    id: 'threewood',
-    name: 'ThreeWood',
-    tagline: 'A new 18-hole golf course from every seed',
-    summary:
-      'A 3D golf game for the browser, built for a phone held in one hand. Every round is a par-72 course grown from a shareable seed, so the same seed gives a friend the same course. A three-tap swing decides power and strike, and the greens break.',
-    details:
-      'The routing of each course is planned by hand and the holes are generated, then checked for fairness. One deterministic physics model runs the live shot, the aim preview, the putt line and the headless test bot. Progress saves after every shot, the game works offline, and there is a daily course everyone shares.',
-    media: {
-      kind: 'landscape',
-      src: '/media/threewood.mp4',
-      poster: '/media/threewood.jpg',
-      label: 'Gameplay recording of ThreeWood: a course flyover, a drive and an approach shot onto the green',
-      caption: 'Hole 1 of a nine-hole round: flyover, drive, approach.',
-    },
-    stack: [
-      ['Rendering', 'Three.js, custom GLSL'],
-      ['Courses', 'Seeded PRNG, simplex-noise terrain'],
-      ['Physics', 'Own deterministic ball simulation'],
-      ['Audio', 'Web Audio'],
-      ['Build', 'Vite, deployed on Vercel'],
-    ],
-    links: [
-      { label: 'Play ThreeWood', href: 'https://threewood.vercel.app' },
-      { label: 'Source on GitHub', href: 'https://github.com/LeighAtkins/threeWood' },
-    ],
-  },
-]
-
-const otherWork = [
-  {
-    name: 'Sofa Style Visualizer',
-    description: 'Upload a room photo and a fabric swatch; Gemini reupholsters the sofa and keeps the room’s lighting.',
-    stack: 'Next.js, Gemini, Cloudinary',
-    href: 'https://github.com/LeighAtkins/style-check',
-  },
-  {
-    name: 'SupportCopilot',
-    description: 'Drafts support replies grounded in a help-centre index, then adds the right product links.',
-    stack: 'Python, LanceDB, Flask, Electron',
-    href: null,
-  },
-  {
-    name: 'GalacticHoroscope',
-    description: 'One TypeScript core shipped three ways: a CLI, a documented REST API and a 3D web page.',
-    stack: 'TypeScript, Express, Three.js, Jest',
-    href: 'https://github.com/LeighAtkins/GalacticHoroscope',
-  },
-]
+// The same records every game reads
+const projects = items.filter((i) => i.project).map((i) => ({ id: i.id, name: i.name, ...i.project }))
+const otherWork = items
+  .filter((i) => i.kind === 'side')
+  .map((i) => ({ name: i.name, description: i.blurb, stack: i.stackLine, href: i.href || null }))
 
 function ProjectMedia({ media }) {
   if (media.kind === 'portrait') {
     return (
       <figure>
-        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid max-w-xl grid-cols-2 gap-4 sm:gap-6">
           <DemoVideo src={media.src} poster={media.poster} label={media.label} width={540} height={960} />
-          <div className="overflow-hidden rounded border border-ink bg-sheet">
-            <Image
-              src={media.still}
-              alt={media.stillAlt}
-              width={540}
-              height={920}
-              className="block h-full w-full object-cover object-top"
-            />
-          </div>
+          {media.src2 ? (
+            <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={540} height={960} />
+          ) : (
+            <div className="overflow-hidden rounded border border-ink bg-sheet">
+              <Image src={media.still} alt={media.stillAlt} width={540} height={920} className="block h-full w-full object-cover object-top" />
+            </div>
+          )}
         </div>
         <figcaption className="mt-3 text-sm text-muted">{media.caption}</figcaption>
       </figure>
@@ -142,6 +38,11 @@ function ProjectMedia({ media }) {
   return (
     <figure>
       <DemoVideo src={media.src} poster={media.poster} label={media.label} width={960} height={600} />
+      {media.src2 && (
+        <div className="mt-4 w-3/4">
+          <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={960} height={600} />
+        </div>
+      )}
       <figcaption className="mt-3 text-sm text-muted">{media.caption}</figcaption>
     </figure>
   )
@@ -300,6 +201,7 @@ export default function Home() {
 
                 <div className="lg:col-span-5">
                   <h3 className="font-display text-4xl font-semibold leading-none sm:text-5xl">{project.name}</h3>
+                  {project.status && <p className="mt-2 font-label text-base font-medium text-muted">{project.status}</p>}
                   <p className="mt-3 font-display text-xl font-medium text-dim">{project.tagline}</p>
                   <p className="mt-5">{project.summary}</p>
                   <p className="mt-4 text-muted">{project.details}</p>

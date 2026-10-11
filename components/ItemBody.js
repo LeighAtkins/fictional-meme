@@ -10,7 +10,11 @@ function Media({ media }) {
       <figure className="ib-media">
         <div className="ib-pair">
           <DemoVideo src={media.src} poster={media.poster} label={media.label} width={540} height={960} framed={false} />
-          <img src={media.still} alt={media.stillAlt} width={540} height={920} loading="lazy" className="ib-still" />
+          {media.src2 ? (
+            <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={540} height={960} framed={false} />
+          ) : (
+            <img src={media.still} alt={media.stillAlt} width={540} height={920} loading="lazy" className="ib-still" />
+          )}
         </div>
         <figcaption className="ib-caption">{media.caption}</figcaption>
       </figure>
@@ -19,6 +23,11 @@ function Media({ media }) {
   return (
     <figure className="ib-media">
       <DemoVideo src={media.src} poster={media.poster} label={media.label} width={960} height={600} framed={false} />
+      {media.src2 && (
+        <div className="ib-second">
+          <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={960} height={600} framed={false} />
+        </div>
+      )}
       <figcaption className="ib-caption">{media.caption}</figcaption>
     </figure>
   )

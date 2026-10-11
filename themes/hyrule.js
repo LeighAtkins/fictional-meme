@@ -4,7 +4,7 @@ import ItemIcon from '../components/ItemIcon'
 import ItemBody from '../components/ItemBody'
 import { useArcade, useInventory, readJSON, writeJSON } from '../lib/arcade'
 import { useDrag } from '../lib/drag'
-import { EMAIL, GITHUB, profile, skills } from '../lib/data'
+import { EMAIL, GITHUB, items, profile, skills } from '../lib/data'
 import { setSoundEnabled } from '../lib/sfx'
 import s from './hyrule.module.css'
 
@@ -17,10 +17,10 @@ const PAGES = ['Select Item', 'Map', 'Quest Status', 'Equipment']
 const COLS = 6
 
 const equipment = [
-  { row: 'Swords', note: 'Languages', kind: 'sword', gear: ['TypeScript', 'Python', 'SQL', 'GLSL'] },
-  { row: 'Shields', note: 'Testing', kind: 'shield', gear: ['Vitest', 'Playwright', 'Jest'] },
-  { row: 'Tunics', note: 'Frameworks', kind: 'tunic', gear: ['React', 'Next.js', 'Express', 'Three.js'] },
-  { row: 'Boots', note: 'Infrastructure', kind: 'boots', gear: ['Docker', 'Kubernetes', 'Vercel', 'Cloudflare'] },
+  { row: 'Swords', note: 'Languages', kind: 'sword', gear: ['TypeScript', 'Rust', 'SQL', 'GLSL'] },
+  { row: 'Shields', note: 'Testing', kind: 'shield', gear: ['Vitest', 'Playwright', 'node:test', 'cargo test'] },
+  { row: 'Tunics', note: 'Frameworks', kind: 'tunic', gear: ['React', 'Next.js', 'Three.js', 'Tauri'] },
+  { row: 'Boots', note: 'Infrastructure', kind: 'boots', gear: ['Docker', 'Kubernetes', 'AWS', 'Cloudflare'] },
 ]
 const gearTints = ['#4cae5a', '#c9a227', '#3d7fd6', '#b84a3a']
 
@@ -40,36 +40,75 @@ const dungeons = [
       { id: 'out', label: 'PDF report and share link', x: 2, y: 2 },
     ],
     doors: [['photo', 'yolo'], ['yolo', 'worker'], ['worker', 'editor'], ['editor', 'api'], ['api', 'db'], ['editor', 'out']],
-    boss: 'Turning segmentation masks into measurement lines a customer will trust enough to cut fabric by.',
   },
   {
     id: 'reelwalk',
     name: 'ReelWalk',
     rooms: [
-      { id: 'editor', label: 'Next.js editor', x: 0, y: 1, start: true },
-      { id: 'db', label: 'Postgres via Prisma', x: 0, y: 2 },
-      { id: 'queue', label: 'SQS queue and dead-letter queue', x: 1, y: 1 },
-      { id: 'render', label: 'Remotion render worker', x: 2, y: 1, boss: true },
-      { id: 's3', label: 'S3 exports', x: 2, y: 2 },
-      { id: 'k8s', label: 'Kubernetes and Helm', x: 1, y: 0 },
+      { id: 'phone', label: 'Phone upload to S3', x: 0, y: 0, start: true },
+      { id: 'editor', label: 'Next.js editor, Remotion Player', x: 0, y: 1 },
+      { id: 'db', label: 'Autosave to Postgres', x: 0, y: 2 },
+      { id: 'outbox', label: 'Outbox to SQS', x: 1, y: 1 },
+      { id: 'fargate', label: 'Fargate render worker', x: 2, y: 1, boss: true },
+      { id: 's3', label: 'MP4 in S3, CloudFront', x: 2, y: 2 },
+      { id: 'ffmpeg', label: 'ffmpeg previews', x: 1, y: 0 },
     ],
-    doors: [['editor', 'db'], ['editor', 'queue'], ['queue', 'render'], ['render', 's3'], ['k8s', 'queue']],
-    boss: 'Making the editor preview and the exported reel come out of one composition, frame for frame.',
+    doors: [['phone', 'ffmpeg'], ['phone', 'editor'], ['editor', 'db'], ['editor', 'outbox'], ['outbox', 'fargate'], ['fargate', 's3']],
   },
   {
     id: 'threewood',
     name: 'ThreeWood',
     rooms: [
-      { id: 'seed', label: 'Seed', x: 0, y: 0, start: true },
-      { id: 'route', label: 'Hand-planned routing', x: 1, y: 0 },
-      { id: 'holes', label: 'Simplex terrain and holes', x: 2, y: 0 },
-      { id: 'fair', label: 'Fairness checks', x: 2, y: 1, boss: true },
-      { id: 'physics', label: 'Deterministic ball physics', x: 1, y: 1 },
-      { id: 'bot', label: 'Headless test bot', x: 0, y: 1 },
-      { id: 'render', label: 'Three.js and GLSL', x: 1, y: 2 },
+      { id: 'seed', label: 'Course seed', x: 0, y: 0, start: true },
+      { id: 'design', label: 'Hole designer and fairness checks', x: 1, y: 0, boss: true },
+      { id: 'grid', label: 'World grid', x: 2, y: 0 },
+      { id: 'mesh', label: 'Toon-shaded terrain', x: 2, y: 1 },
+      { id: 'physics', label: 'Fixed-step ball physics', x: 1, y: 1 },
+      { id: 'swing', label: 'Three-tap swing', x: 0, y: 1 },
+      { id: 'peers', label: 'PeerJS rooms over WebRTC', x: 1, y: 2 },
     ],
-    doors: [['seed', 'route'], ['route', 'holes'], ['holes', 'fair'], ['fair', 'physics'], ['physics', 'bot'], ['physics', 'render']],
-    boss: 'Every seed has to grow a course that is fair to play, so generated holes are checked by the same physics the player uses.',
+    doors: [['seed', 'design'], ['design', 'grid'], ['grid', 'mesh'], ['grid', 'physics'], ['swing', 'physics'], ['physics', 'peers']],
+  },
+  {
+    id: 'sofapaint-desktop',
+    name: 'SofaPaint Desktop',
+    rooms: [
+      { id: 'in', label: 'Photo or PDF', x: 0, y: 0, start: true },
+      { id: 'ocr', label: 'Rust OCR and pdf.js', x: 1, y: 0 },
+      { id: 'parse', label: 'Code = value parser', x: 2, y: 0 },
+      { id: 'rules', label: 'Rules engine', x: 2, y: 1 },
+      { id: 'guides', label: '199 guide drawings', x: 1, y: 1, boss: true },
+      { id: 'plan', label: 'To-scale plan', x: 0, y: 2 },
+      { id: 'model', label: 'Three.js model', x: 2, y: 2 },
+    ],
+    doors: [['in', 'ocr'], ['ocr', 'parse'], ['parse', 'rules'], ['rules', 'guides'], ['guides', 'plan'], ['rules', 'model']],
+  },
+  {
+    id: 'handoff-tracker',
+    name: 'Handoff Tracker',
+    rooms: [
+      { id: 'web', label: 'Next.js dashboard', x: 0, y: 0, start: true },
+      { id: 'domain', label: 'Domain rules: Legs and Handoffs', x: 1, y: 0 },
+      { id: 'db', label: 'Postgres with audit log', x: 2, y: 0 },
+      { id: 'worker', label: 'Polling worker', x: 1, y: 1 },
+      { id: 'adapters', label: 'Carrier adapters', x: 1, y: 2 },
+      { id: 'normal', label: 'Normaliser (incl. Japanese)', x: 0, y: 2 },
+      { id: 'handoff', label: 'Follow the handoff', x: 2, y: 2, boss: true },
+    ],
+    doors: [['web', 'domain'], ['domain', 'db'], ['worker', 'domain'], ['worker', 'adapters'], ['adapters', 'normal'], ['adapters', 'handoff']],
+  },
+  {
+    id: 'tslock',
+    name: 'TSLock',
+    rooms: [
+      { id: 'cli', label: 'tslock CLI', x: 0, y: 0, start: true },
+      { id: 'vscode', label: 'VS Code workspace', x: 1, y: 0 },
+      { id: 'coach', label: 'Coach in the terminal', x: 1, y: 1 },
+      { id: 'tsc', label: 'tsc against the contract', x: 2, y: 1, boss: true },
+      { id: 'sandbox', label: 'Sandboxed Node run', x: 0, y: 2 },
+      { id: 'trace', label: 'Inspector trace', x: 2, y: 2 },
+    ],
+    doors: [['cli', 'vscode'], ['vscode', 'coach'], ['coach', 'tsc'], ['coach', 'sandbox'], ['coach', 'trace']],
   },
 ]
 
@@ -79,6 +118,8 @@ const tips = [
   'SofaPaint’s photo mode runs YOLO on Modal, then a Cloudflare Worker turns the masks into labelled measurement lines.',
   'ThreeWood uses one deterministic physics model for the live shot, the aim preview, the putt line and the test bot.',
   'ReelWalk’s preview and its export are the same Remotion composition, so the editor never lies about the render.',
+  'Handoff Tracker follows a parcel from 4PX to Sagawa even when the tracking number changes halfway.',
+  'TSLock only passes a challenge when the code runs and its types match a contract the student cannot edit.',
   'Drag an item onto a yellow C button to equip it. Then press 1, 2 or 3 to use it.',
   'Press Q and E (or the Z and R tabs) to turn the menu. The Map shows how each project is built.',
   `Leigh reads every email sent to ${EMAIL}. Even the ones about fairies.`,
@@ -568,7 +609,7 @@ export default function Hyrule() {
       ) : (
         <div className={s.fieldHint}>
           <p>
-            <kbd>WASD</kbd> or arrows to run, <kbd>J</kbd> or click to swing, <kbd>Space</kbd> to jump. Open the three chests for Leigh’s projects.
+            <kbd>WASD</kbd> or arrows to run, <kbd>J</kbd> or click to swing, <kbd>Space</kbd> to jump. Open the chests for Leigh’s projects.
           </p>
           <p>
             <kbd>Enter</kbd> opens the pause menu with everything else.
@@ -612,6 +653,10 @@ export default function Hyrule() {
   )
 }
 
+function hardestOf(id) {
+  return items.find((i) => i.id === id)?.project?.hardest || ''
+}
+
 function DungeonMap({ d }) {
   const W = 3
   const H = 3
@@ -649,7 +694,7 @@ function DungeonMap({ d }) {
         ))}
       </div>
       <p className={s.bossNote}>
-        <strong>Boss:</strong> {d.boss}
+        <strong>Boss:</strong> {d.boss || hardestOf(d.id)}
       </p>
     </div>
   )

@@ -215,6 +215,9 @@ export default function CastleHall({ paintings, paused, onEnter, onSecret, onTal
       { pos: [-W / 2 + 0.06, 2.4, -2], rot: Math.PI / 2, w: 3.2, h: 2.4 },
       { pos: [W / 2 - 0.06, 2.4, -2], rot: -Math.PI / 2, w: 3.2, h: 2.4 },
       { pos: [3.4, 2.6, -D / 2 + 0.06], rot: 0, w: 2.2, h: 1.65 },
+      { pos: [-W / 2 + 0.06, 2.4, 3.6], rot: Math.PI / 2, w: 3.2, h: 2.4 },
+      { pos: [W / 2 - 0.06, 2.4, 3.6], rot: -Math.PI / 2, w: 3.2, h: 2.4 },
+      { pos: [-W / 2 + 0.06, 2.4, -6.6], rot: Math.PI / 2, w: 2.2, h: 1.65 },
     ]
     const frames = []
     const loads = paintings.slice(0, slots.length).map(async (p, i) => {

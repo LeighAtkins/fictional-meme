@@ -23,6 +23,9 @@ const defaultLayout = {
   galactic: { x: 6, y: 2, r: false },
   github: { x: 7, y: 2, r: false },
   linkedin: { x: 8, y: 2, r: false },
+  'sofapaint-desktop': { x: 2, y: 3, r: false },
+  'handoff-tracker': { x: 4, y: 3, r: false },
+  tslock: { x: 6, y: 3, r: false },
   duck: { x: 1, y: 4, r: false },
 }
 

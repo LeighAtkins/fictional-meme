@@ -55,7 +55,7 @@ export default function Castle() {
   // Where each painting hangs in the hall: the big frames get the projects
   const hallOrder = useMemo(
     () =>
-      ['sofapaint', 'style-check', 'threewood', 'reelwalk', 'supportcopilot', 'galactic']
+      ['sofapaint', 'style-check', 'threewood', 'reelwalk', 'handoff-tracker', 'galactic', 'sofapaint-desktop', 'tslock', 'supportcopilot']
         .map((id) => paintings.find((p) => p.id === id))
         .filter(Boolean)
         .map((p) => ({ id: p.id, name: p.name, number: paintings.indexOf(p) + 1, poster: p.project?.media.poster, color: canvasColors[p.id] })),

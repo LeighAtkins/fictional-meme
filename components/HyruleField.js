@@ -18,6 +18,9 @@ const CHESTS = [
   { id: 'sofapaint', label: 'SofaPaint', pos: [-6, 0, -4] },
   { id: 'threewood', label: 'ThreeWood', pos: [0, 0, -8.5] },
   { id: 'reelwalk', label: 'ReelWalk', pos: [6, 0, -4] },
+  { id: 'sofapaint-desktop', label: 'SofaPaint Desktop', pos: [-7.5, 0, -9.5] },
+  { id: 'handoff-tracker', label: 'Handoff Tracker', pos: [7.5, 0, -9.5] },
+  { id: 'tslock', label: 'TSLock', pos: [-10.5, 0, -2] },
 ]
 
 const RADIUS = 13.5
