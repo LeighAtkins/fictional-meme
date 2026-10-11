@@ -99,12 +99,6 @@
   background: linear-gradient(rgba(8, 8, 20, 0), rgba(8, 8, 20, 0.88) 2.5rem);
 }
 
-.prompt {
-  max-width: 44rem;
-  font-size: 0.95rem;
-  color: #b9b1cc;
-}
-
 .picker {
   display: flex;
   gap: 0.5rem;
@@ -123,7 +117,9 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(20, 18, 40, 0.75);
   text-align: left;
-  transition: border-color 150ms, background 150ms;
+  transition:
+    border-color 150ms,
+    background 150ms;
 }
 
 .pick:hover,
@@ -187,6 +183,17 @@
   box-shadow: 0 1px 0 #a3226a;
 }
 
+.skip {
+  background: transparent;
+  color: #ffd1ec;
+  border: 1px solid #ff4fb0;
+  box-shadow: none;
+}
+
+.skip:hover {
+  background: rgba(255, 79, 176, 0.15);
+}
+
 .play:disabled,
 .pick:disabled {
   opacity: 0.6;
@@ -211,42 +218,54 @@
   .top {
     flex-direction: column;
   }
+
   .quick {
     justify-content: flex-start;
   }
+
   .quick .quickLink:last-child {
     display: none;
   }
+
   .prompt,
   .foot {
     display: none;
   }
+
   .info p {
     display: none;
   }
+
   .name {
     font-size: 2.1rem;
   }
+
   .role {
     font-size: 0.85rem;
     margin-top: 0.4rem;
   }
+
   .top {
     padding-bottom: 1.5rem;
     gap: 0.4rem;
   }
+
   .dock {
     padding-top: 1.5rem;
   }
+
   .pick {
     padding: 0.35rem 0.6rem;
   }
+
   .pickTitle {
     font-size: 0.9rem;
   }
+
   .info {
     margin-top: 0.5rem;
   }
+
   .play {
     width: 100%;
   }

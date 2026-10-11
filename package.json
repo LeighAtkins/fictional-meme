@@ -1,7 +1,7 @@
 {
     "name": "leigh-atkins-portfolio",
     "version": "1.0.0",
-    "description": "Professional portfolio website for Leigh Atkins showcasing skills, projects, and experience",
+    "description": "Portfolio of Leigh Atkins, full-stack developer, played as a video-game item box: a three.js living room, five homage games, and a plain résumé.",
     "main": "index.js",
     "scripts": {
         "dev": "next dev",
@@ -11,22 +11,22 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/LeighAtkins/portfolio.git"
+        "url": "git+https://github.com/LeighAtkins/fictional-meme.git"
     },
     "keywords": [
         "portfolio",
-        "website",
         "nextjs",
-        "tailwindcss",
-        "vercel",
-        "professional"
+        "threejs",
+        "react",
+        "webgl",
+        "tailwindcss"
     ],
     "author": "Leigh Atkins",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/LeighAtkins/portfolio/issues"
+        "url": "https://github.com/LeighAtkins/fictional-meme/issues"
     },
-    "homepage": "https://github.com/LeighAtkins/portfolio#readme",
+    "homepage": "https://itembox.site",
     "devDependencies": {
         "autoprefixer": "^10.4.17",
         "eslint": "^8",

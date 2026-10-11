@@ -1,10 +1,15 @@
+import { Barlow, Barlow_Condensed, Barlow_Semi_Condensed } from 'next/font/google'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import DemoVideo from '../components/DemoVideo'
 import { DimensionH, DimensionV } from '../components/Dimension'
-import { EMAIL, SITE_URL, items } from '../lib/data'
+import { EMAIL, SITE_URL, items, profile } from '../lib/data'
+
+// The résumé keeps its own typeface, so the game pages never download it
+const barlow = Barlow({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-barlow' })
+const barlowSemi = Barlow_Semi_Condensed({ subsets: ['latin'], weight: ['500', '600'], variable: '--font-barlow-semi' })
+const barlowCond = Barlow_Condensed({ subsets: ['latin'], weight: ['500'], variable: '--font-barlow-cond' })
 
 const TITLE = 'Leigh Atkins, full-stack developer: résumé'
 const DESCRIPTION =
@@ -26,7 +31,7 @@ function ProjectMedia({ media }) {
             <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={540} height={960} />
           ) : (
             <div className="overflow-hidden rounded border border-ink bg-sheet">
-              <Image src={media.still} alt={media.stillAlt} width={540} height={920} className="block h-full w-full object-cover object-top" />
+              <img src={media.still} alt={media.stillAlt} width={540} height={920} loading="lazy" className="block h-full w-full object-cover object-top" />
             </div>
           )}
         </div>
@@ -64,7 +69,7 @@ export default function Home() {
   }, [])
 
   return (
-    <>
+    <div className={`${barlow.variable} ${barlowSemi.variable} ${barlowCond.variable} font-sans`}>
       <Head>
         <title>{TITLE}</title>
         <meta name="description" content={DESCRIPTION} />
@@ -113,7 +118,7 @@ export default function Home() {
         Skip to work
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-rule bg-paper/90 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-rule bg-paper">
         <nav aria-label="Main" className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
           <a href="#top" className="font-display text-xl font-semibold">
             Leigh Atkins
@@ -155,7 +160,7 @@ export default function Home() {
                   className="font-display text-[clamp(2.25rem,9.5vw,5.75rem)] font-semibold leading-[0.98] tracking-[-0.01em]"
                 >
                   <span className="block whitespace-nowrap">Software for sofas,</span>
-                  <span className="block whitespace-nowrap">floor plans</span>
+                  <span className="block whitespace-nowrap">parcels, floor plans</span>
                   <span className="block whitespace-nowrap">and fairways.</span>
                 </h1>
                 <DimensionV
@@ -167,9 +172,7 @@ export default function Home() {
             </div>
 
             <p className="mt-8 max-w-[38rem] text-xl leading-relaxed text-muted">
-              I’m Leigh Atkins, a full-stack developer. I build browser tools around real-world things:
-              measuring furniture on a drawing, turning a home tour into a reel, growing a golf course from a
-              seed.
+              I’m {profile.name}, a full-stack developer. {profile.pitch}
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
@@ -262,12 +265,13 @@ export default function Home() {
         <section id="about" aria-labelledby="about-heading" className="border-t border-ink">
           <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-12">
             <div className="md:col-span-4 lg:col-span-3">
-              <Image
-                src="/leigh-atkins-photo.jpg"
+              <img
+                src="/me/portrait.webp"
                 alt="Leigh Atkins"
                 width={600}
                 height={768}
-                sizes="(min-width: 768px) 280px, 60vw"
+                loading="lazy"
+                decoding="async"
                 className="w-3/5 rounded border border-ink md:w-full"
               />
             </div>
@@ -275,17 +279,8 @@ export default function Home() {
               <h2 id="about-heading" className="font-display text-2xl font-semibold text-muted">
                 About
               </h2>
-              <p className="mt-6 text-xl leading-relaxed">
-                Most of what I build starts with a physical thing and a person who has to describe it to someone
-                else: a sofa that needs a cover made to fit, a house that has to be shown to buyers, a fairway
-                that should be worth playing twice.
-              </p>
-              <p className="mt-5 text-muted">
-                I work mostly in TypeScript, across the browser (Canvas, Three.js, React and Next.js) and the
-                services behind it (Node, PostgreSQL, queues and workers, Docker and Kubernetes). I like
-                projects where the interface has to be exact, because someone will cut fabric or book a viewing
-                based on what it shows.
-              </p>
+              <p className="mt-6 text-xl leading-relaxed">{profile.about[0]}</p>
+              <p className="mt-5 text-muted">{profile.about[1]}</p>
             </div>
           </div>
         </section>
@@ -329,6 +324,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-    </>
+    </div>
   )
 }

@@ -82,7 +82,7 @@ export default function Elevator({ sound, onArrive, onSecret }) {
         onSecret?.()
       }
       setOpening(true)
-      const t = setTimeout(onArrive, 1400)
+      const t = setTimeout(onArrive, 700)
       return () => clearTimeout(t)
     }
     const t = setTimeout(() => setSeg((v) => v + 1), SEGMENT)

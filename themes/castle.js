@@ -117,11 +117,11 @@ export default function Castle() {
           <img src="/me/face.webp" alt="" className={s.lifeFace} />
           <span>×</span>1
         </button>
-        <p className={s.stars}>
+        <p className={s.stars} aria-label={`${starTotal} of ${starMax} stars collected`} title="Stars: one per project feature you’ve seen, plus one per secret">
           <Star className={s.hudStar} />
           <span>×</span>
           {starTotal}
-          <small>/{starMax}</small>
+          <small> of {starMax}</small>
         </p>
       </header>
 

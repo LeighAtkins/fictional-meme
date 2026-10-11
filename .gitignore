@@ -41,3 +41,16 @@ node_modules/
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+
+# Local production builds
+.next-prod/
+
+# Local tooling and notes, kept out of the public repo
+.cursor/
+.roo/
+.roomodes
+.taskmasterconfig
+.windsurfrules
+.env.example
+scripts/
+docs/

@@ -17,9 +17,10 @@ module.exports = {
         dim: '#C43D3A',
       },
       fontFamily: {
-        sans: ['var(--font-barlow)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-barlow-semi)', 'var(--font-barlow)', 'system-ui', 'sans-serif'],
-        label: ['var(--font-barlow-cond)', 'var(--font-barlow)', 'system-ui', 'sans-serif'],
+        // Each face falls back to the system sans where its variable is not defined
+        sans: ['var(--font-barlow, system-ui)', 'sans-serif'],
+        display: ['var(--font-barlow-semi, var(--font-barlow, system-ui))', 'sans-serif'],
+        label: ['var(--font-barlow-cond, var(--font-barlow, system-ui))', 'sans-serif'],
       },
     },
   },

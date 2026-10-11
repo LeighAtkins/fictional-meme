@@ -244,6 +244,11 @@ export default function CastleHall({ paintings, paused, onEnter, onSecret, onTal
       g.add(frame, art)
       g.position.set(...slot.pos)
       g.rotation.y = slot.rot
+      // Compile the painting's shader before it appears, so walking past never stutters
+      try {
+        await world.renderer.compileAsync(g, camera, scene)
+      } catch {}
+      if (disposed) return
       scene.add(g)
       // A plaque underneath
       const c = makeCanvas(512, 96)
@@ -261,12 +266,14 @@ export default function CastleHall({ paintings, paused, onEnter, onSecret, onTal
     })
 
     let hero
-    createHero('/me/plumber.webp', 1.9).then((h) => {
+    createHero('/me/plumber.webp', 1.9).then(async (h) => {
       if (disposed) return
       hero = h
       hero.group.position.set(0, 0, 6)
       scene.add(hero.group)
-      camera.position.set(0, 4.5, 14)
+      camera.position.set(0, 4.2, 14.5)
+      camera.lookAt(0, 1.4, 6)
+      await world.start()
     })
 
     const jumpNow = () => {
@@ -347,7 +354,7 @@ export default function CastleHall({ paintings, paused, onEnter, onSecret, onTal
       followCamera(camera, hero.group.position, offset, dt, new THREE.Vector3(0, 1.4, 0))
     })
 
-    api.current = { paused: false }
+    api.current = { paused: false, setPaused: (p) => world.setPaused(p) }
     Promise.all(loads)
 
     return () => {
@@ -361,6 +368,8 @@ export default function CastleHall({ paintings, paused, onEnter, onSecret, onTal
   useEffect(() => {
     if (!api.current || !inputRef.current) return
     api.current.paused = paused
+    // Nothing needs drawing while a course or the face covers the hall
+    api.current.setPaused?.(paused)
     if (paused) inputRef.current.detach()
     else inputRef.current.attach()
   }, [paused])

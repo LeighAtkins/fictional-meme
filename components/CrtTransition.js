@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react'
 export default function CrtTransition({ src }) {
   const [done, setDone] = useState(false)
   useEffect(() => {
-    const t = setTimeout(() => setDone(true), 1100)
+    const t = setTimeout(() => setDone(true), 1000)
     return () => clearTimeout(t)
   }, [])
   if (done) return null
   return (
     <div className="crt-through" aria-hidden="true">
       <div className="crt-through-img" style={{ backgroundImage: `url(${src})` }} />
+      <div className="crt-through-flash" />
       <div className="crt-through-lines" />
     </div>
   )

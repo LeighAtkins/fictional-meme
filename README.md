@@ -16,14 +16,22 @@ All artwork is drawn for this site (SVG item icons, CSS scenes) or processed fro
 
 ## Where things live
 
-- `lib/data.js`: every project, skill and link, shared by all games
-- `lib/arcade.js`: sound, secrets, the Konami code and saved inventory order
+- `lib/data.js`: every project, skill and link, shared by all games and the résumé
+- `lib/three/room.js`: the living room, consoles and the insert animation (loaded after the page's words render)
+- `lib/three/world.js`: the small third-person engine behind the Ocarina field and the Mario hall
 - `themes/*.js`: one file (plus a CSS module) per game
-- `components/LivingRoom.js`, `lib/three/`: the 3D living room, consoles and the walkable-world engine
+- `lib/arcade.js`: sound, secrets, the Konami code and saved inventory order
 - `components/Shelf.js`: the 2D cartridge shelf, used when WebGL is unavailable
 - `public/me/`: the portraits, one style per game
 
 There are fifteen secrets. The count shows in the top bar.
+
+## Performance notes
+
+- Shaders compile with `compileAsync` and textures upload a frame at a time before a 3D scene fades in, so nothing stalls on first draw.
+- The room's shadows only re-render while something on the table moves.
+- Game code prefetches while the browser is idle; the game faces are not preloaded on the landing page.
+- CSS animations stick to transform and opacity.
 
 ## Development
 

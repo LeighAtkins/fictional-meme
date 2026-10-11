@@ -15,10 +15,14 @@ export default function DemoVideo({ src, poster, label, width, height, className
       return
     }
 
+    let timer = 0
     const observer = new IntersectionObserver(
       ([entry]) => {
+        clearTimeout(timer)
         if (entry.isIntersecting && !stopped.current) {
-          video.play().catch(() => {})
+          // Wait until the clip has settled in view, so scrolling past a dozen
+          // clips never spins up a dozen video decoders at once
+          timer = setTimeout(() => video.play().catch(() => {}), 250)
         } else {
           video.pause()
         }
@@ -26,7 +30,10 @@ export default function DemoVideo({ src, poster, label, width, height, className
       { threshold: 0.35 }
     )
     observer.observe(video)
-    return () => observer.disconnect()
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
   }, [])
 
   const toggle = () => {

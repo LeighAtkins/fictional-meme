@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
-import Shelf from '../components/Shelf'
 import CrtTransition from '../components/CrtTransition'
+import LivingRoom from '../components/LivingRoom'
+import Shelf from '../components/Shelf'
 import SystemBar, { Toast } from '../components/SystemBar'
 import { ArcadeProvider, readJSON, writeJSON } from '../lib/arcade'
 import { EMAIL, GITHUB, LINKEDIN, SITE_URL, games, profile } from '../lib/data'
@@ -11,18 +12,28 @@ import { sfx } from '../lib/sfx'
 
 const TITLE = 'Leigh Atkins, full-stack developer · itembox.site'
 const DESCRIPTION =
-  'The portfolio of Leigh Atkins, full-stack developer, as a video-game item box. Pick a game, then use SofaPaint, ReelWalk and ThreeWood from its inventory.'
+  'Leigh Atkins, full-stack developer. A portfolio you play: pick a game in a 3D living room and find SofaPaint, ReelWalk, ThreeWood, Handoff Tracker and more in its inventory. Plain résumé at /resume.'
 
 const loading = () => <div className="fixed inset-0 bg-black" />
-// three.js only runs in the browser
-const LivingRoom = dynamic(() => import('../components/LivingRoom'), { ssr: false })
+const loaders = {
+  hyrule: () => import('../themes/hyrule'),
+  attache: () => import('../themes/attache'),
+  wasteland: () => import('../themes/wasteland'),
+  castle: () => import('../themes/castle'),
+  normandy: () => import('../themes/normandy'),
+}
+const screens = Object.fromEntries(Object.entries(loaders).map(([id, load]) => [id, dynamic(load, { ssr: false, loading })]))
 
-const screens = {
-  hyrule: dynamic(() => import('../themes/hyrule'), { ssr: false, loading }),
-  attache: dynamic(() => import('../themes/attache'), { ssr: false, loading }),
-  wasteland: dynamic(() => import('../themes/wasteland'), { ssr: false, loading }),
-  castle: dynamic(() => import('../themes/castle'), { ssr: false, loading }),
-  normandy: dynamic(() => import('../themes/normandy'), { ssr: false, loading }),
+// Fetch every game's code while the visitor is still looking at the room, one
+// at a time and only when the browser is idle, so inserting a game never waits
+function prefetchGames() {
+  const queue = Object.values(loaders)
+  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300))
+  const next = () => {
+    const load = queue.shift()
+    if (load) idle(() => load().finally(next), { timeout: 4000 })
+  }
+  next()
 }
 
 export default function Home() {
@@ -71,6 +82,7 @@ export default function Home() {
         <meta name="author" content={profile.name} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#16132b" />
+        <style>{'html,body{background:#0b0b18}'}</style>
         <link rel="canonical" href={SITE_URL} />
         <link rel="manifest" href="/site.webmanifest" />
         <meta property="og:type" content="website" />
@@ -78,6 +90,9 @@ export default function Home() {
         <meta property="og:title" content="Leigh Atkins: the item box" />
         <meta property="og:description" content={DESCRIPTION} />
         <meta property="og:image" content={`${SITE_URL}/og.jpg`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="A 3D living room with a CRT television, three games consoles and five game cases starring Leigh Atkins" />
         <meta property="og:site_name" content="itembox.site" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Leigh Atkins: the item box" />
@@ -101,11 +116,17 @@ export default function Home() {
         />
       </Head>
 
-      <div className={fontVars}>
+      <div className={fontVars} style={{ fontFamily: 'var(--f-archivo), system-ui, sans-serif' }}>
         {noWebGL ? (
           !Screen && <Shelf onInsert={setGame} lastGame={lastGame} />
         ) : (
-          <LivingRoom active={!Screen} onEnter={enter} onFail={() => setNoWebGL(true)} />
+          <LivingRoom
+            active={!Screen}
+            onEnter={enter}
+            onFail={() => setNoWebGL(true)}
+            onReady={prefetchGames}
+            onInsertStart={(id) => loaders[id]?.()}
+          />
         )}
         {Screen && (
           <>

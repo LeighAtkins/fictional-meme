@@ -1,10 +1,15 @@
 {
-    "name": "Leigh Atkins, full-stack developer",
-    "short_name": "Leigh Atkins",
-    "description": "Browser tools around real-world things: SofaPaint, ReelWalk and ThreeWood.",
-    "start_url": "/",
-    "display": "browser",
-    "background_color": "#F3F6F8",
-    "theme_color": "#F3F6F8",
-    "lang": "en"
+  "name": "Leigh Atkins, full-stack developer",
+  "short_name": "itembox",
+  "description": "The portfolio of Leigh Atkins, played as a video-game item box.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0b0b18",
+  "theme_color": "#16132b",
+  "lang": "en",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
 }

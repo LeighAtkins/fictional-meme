@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import TouchPad from './TouchPad'
 import { createHero, createInput, createWorld, followCamera, jump, stepHero, canvasTex } from '../lib/three/world'
 import { makeCanvas } from '../lib/three/art'
@@ -14,14 +15,19 @@ const RUPEES = [
   { color: '#ff3b3b', value: 20, weight: 0.05 },
 ]
 
-const CHESTS = [
-  { id: 'sofapaint', label: 'SofaPaint', pos: [-6, 0, -4] },
-  { id: 'threewood', label: 'ThreeWood', pos: [0, 0, -8.5] },
-  { id: 'reelwalk', label: 'ReelWalk', pos: [6, 0, -4] },
-  { id: 'sofapaint-desktop', label: 'SofaPaint Desktop', pos: [-7.5, 0, -9.5] },
-  { id: 'handoff-tracker', label: 'Handoff Tracker', pos: [7.5, 0, -9.5] },
-  { id: 'tslock', label: 'TSLock', pos: [-10.5, 0, -2] },
+// Six chests on an arc in front of the start, so no label hides behind another
+const CHEST_ORDER = [
+  ['sofapaint-desktop', 'SofaPaint Desktop'],
+  ['sofapaint', 'SofaPaint'],
+  ['threewood', 'ThreeWood'],
+  ['reelwalk', 'ReelWalk'],
+  ['handoff-tracker', 'Handoff Tracker'],
+  ['tslock', 'TSLock'],
 ]
+const CHESTS = CHEST_ORDER.map(([id, label], i) => {
+  const a = ((-75 + i * 30) * Math.PI) / 180
+  return { id, label, pos: [Math.sin(a) * 9, 0, -Math.cos(a) * 9 - 1], facing: a }
+})
 
 const RADIUS = 13.5
 
@@ -46,10 +52,15 @@ function grassTexture() {
   return canvasTex(c, [18, 18])
 }
 
-function labelSprite(text) {
+function labelSprite(text, family) {
   const c = makeCanvas(512, 128)
   const ctx = c.getContext('2d')
-  ctx.font = '700 64px serif'
+  // Shrink long names to fit rather than clip them
+  let size = 66
+  do {
+    size -= 2
+    ctx.font = `700 ${size}px ${family}, serif`
+  } while (ctx.measureText(text).width > 480 && size > 28)
   ctx.textAlign = 'center'
   ctx.lineWidth = 10
   ctx.strokeStyle = 'rgba(0,0,0,0.75)'
@@ -104,17 +115,23 @@ function buildPot() {
   return m
 }
 
+// Five blades merged into one mesh, so seventy tufts cost seventy draw calls
+const tuftMaterials = Array.from({ length: 4 }, (_, i) => new THREE.MeshStandardMaterial({ color: `hsl(${100 + i * 6}, 55%, ${28 + i * 3}%)`, flatShading: true }))
 function buildTuft(r) {
-  const g = new THREE.Group()
-  const m = new THREE.MeshStandardMaterial({ color: `hsl(${100 + r() * 20}, 55%, ${28 + r() * 10}%)`, flatShading: true })
+  const blades = []
+  const m = new THREE.Matrix4()
+  const q = new THREE.Quaternion()
   for (let i = 0; i < 5; i++) {
-    const blade = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.45 + r() * 0.25, 4), m)
-    blade.position.set((r() - 0.5) * 0.35, 0.25, (r() - 0.5) * 0.35)
-    blade.rotation.set((r() - 0.5) * 0.5, r() * 3, (r() - 0.5) * 0.5)
-    blade.castShadow = true
-    g.add(blade)
+    const geo = new THREE.ConeGeometry(0.07, 0.45 + r() * 0.25, 4)
+    q.setFromEuler(new THREE.Euler((r() - 0.5) * 0.5, r() * 3, (r() - 0.5) * 0.5))
+    m.compose(new THREE.Vector3((r() - 0.5) * 0.35, 0.25, (r() - 0.5) * 0.35), q, new THREE.Vector3(1, 1, 1))
+    geo.applyMatrix4(m)
+    blades.push(geo)
   }
-  return g
+  const mesh = new THREE.Mesh(mergeGeometries(blades), tuftMaterials[Math.floor(r() * tuftMaterials.length)])
+  mesh.castShadow = true
+  blades.forEach((g) => g.dispose())
+  return mesh
 }
 
 function buildTree(r) {
@@ -191,8 +208,8 @@ export default function HyruleField({ paused, onChest, rupees, setRupees, onSecr
     // A dirt path to the chests
     const path = new THREE.Mesh(new THREE.CircleGeometry(2.4, 24), new THREE.MeshStandardMaterial({ color: '#8a6a42', roughness: 1 }))
     path.rotation.x = -Math.PI / 2
-    path.position.set(0, 0.01, -4)
-    path.scale.set(3.2, 1.4, 1)
+    path.position.set(0, 0.01, -4.5)
+    path.scale.set(4.1, 2.3, 1)
     path.receiveShadow = true
     scene.add(path)
 
@@ -266,11 +283,11 @@ export default function HyruleField({ paused, onChest, rupees, setRupees, onSecr
     CHESTS.forEach((c) => {
       const ch = buildChest()
       ch.position.set(...c.pos)
+      // Each chest faces the middle of the field
+      ch.rotation.y = -c.facing
       ch.userData.id = c.id
       ch.userData.opened = false
-      const label = labelSprite(c.label)
-      label.position.set(0, 1.9, 0)
-      ch.add(label)
+      ch.userData.text = c.label
       scene.add(ch)
       chests.push(ch)
       solids.push({ obj: ch, r: 0.8 })
@@ -311,12 +328,32 @@ export default function HyruleField({ paused, onChest, rupees, setRupees, onSecr
     let slashT = 0
 
     let hero
-    const ready = createHero('/me/hero-of-time.webp', 2.1).then((h) => {
+    // Chest names are set in the game's own face, once it has loaded
+    const family = getComputedStyle(mount).getPropertyValue('--f-cinzel').trim() || 'serif'
+    const labelsReady = document.fonts
+      .load(`700 64px ${family}`)
+      .catch(() => {})
+      .then(() => {
+        if (disposed) return
+        for (const ch of chests) {
+          const label = labelSprite(ch.userData.text, family)
+          label.position.set(0, 1.9, 0)
+          ch.add(label)
+          ch.userData.label = label
+        }
+      })
+
+    createHero('/me/hero-of-time.webp', 2.1).then(async (h) => {
+      await labelsReady
       if (disposed) return
       hero = h
       hero.group.position.set(0, 0, 4)
       scene.add(hero.group)
-      camera.position.set(0, 4, 11)
+      camera.position.set(0, 4.2, 11)
+      camera.lookAt(0, 1.2, 4)
+      // Every shader compiles before the first frame. Rupees and particles reuse
+      // materials already in the scene, so a swing never stalls on a new one
+      await world.start()
     })
 
     const near = (obj, dist) => hero && Math.hypot(obj.position.x - hero.group.position.x, obj.position.z - hero.group.position.z) < dist
@@ -407,7 +444,7 @@ export default function HyruleField({ paused, onChest, rupees, setRupees, onSecr
           ch.userData.opening = Math.min(1, ch.userData.opening + dt * 2.5)
           ch.userData.lid.rotation.x = -ch.userData.opening * 1.9
         }
-        ch.children[ch.children.length - 1].position.y = 1.9 + Math.sin(t * 2 + ch.position.x) * 0.08
+        if (ch.userData.label) ch.userData.label.position.y = 1.9 + Math.sin(t * 2 + ch.position.x) * 0.08
       }
       for (let i = rupees.length - 1; i >= 0; i--) {
         const m = rupees[i]
@@ -448,7 +485,6 @@ export default function HyruleField({ paused, onChest, rupees, setRupees, onSecr
     })
 
     api.current = { paused: false, setPaused: (p) => world.setPaused(p) }
-    ready.then(() => {})
 
     return () => {
       disposed = true
@@ -461,7 +497,8 @@ export default function HyruleField({ paused, onChest, rupees, setRupees, onSecr
   useEffect(() => {
     if (!api.current) return
     api.current.paused = paused
-    // Keep drawing the field behind the menu, but stop the hero
+    // The field freezes behind the pause menu, as it does in the original
+    api.current.setPaused(paused)
     if (inputRef.current) {
       if (paused) inputRef.current.detach()
       else inputRef.current.attach()

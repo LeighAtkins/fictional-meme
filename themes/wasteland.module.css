@@ -225,17 +225,22 @@
   position: absolute;
   left: 0;
   right: 0;
+  top: 0;
   height: 18%;
-  top: -20%;
   pointer-events: none;
   z-index: 6;
   background: linear-gradient(transparent, rgba(65, 245, 147, 0.05), transparent);
   animation: roll 7s linear infinite;
+  will-change: transform;
 }
 
+/* Moved with transform so the roll bar never repaints the screen */
 @keyframes roll {
+  from {
+    transform: translateY(-110%);
+  }
   to {
-    top: 110%;
+    transform: translateY(620%);
   }
 }
 
@@ -585,9 +590,10 @@
 
 .wave span {
   flex: 1;
-  height: 2px;
+  height: 90%;
   background: var(--g);
   box-shadow: 0 0 6px var(--g);
+  transform: scaleY(0.03);
 }
 
 .waveOn span {
@@ -596,10 +602,10 @@
 
 @keyframes wave {
   from {
-    height: 4%;
+    transform: scaleY(0.05);
   }
   to {
-    height: 90%;
+    transform: scaleY(1);
   }
 }
 

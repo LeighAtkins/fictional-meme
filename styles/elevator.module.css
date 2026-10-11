@@ -267,29 +267,27 @@
 
 /* At the end the doors shut, then the car opens onto the squad screen */
 .doorOpenL {
-  animation: shutL 1400ms forwards;
+  animation: shutL 650ms cubic-bezier(0.6, 0, 0.4, 1) forwards;
 }
 
 .doorOpenR {
-  animation: shutR 1400ms forwards;
+  animation: shutR 650ms cubic-bezier(0.6, 0, 0.4, 1) forwards;
 }
 
 @keyframes shutL {
-  0% {
+  from {
     transform: translateX(-100%);
   }
-  45%,
-  100% {
+  to {
     transform: translateX(0);
   }
 }
 
 @keyframes shutR {
-  0% {
+  from {
     transform: translateX(100%) scaleX(-1);
   }
-  45%,
-  100% {
+  to {
     transform: translateX(0) scaleX(-1);
   }
 }

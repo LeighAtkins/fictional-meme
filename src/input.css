@@ -167,37 +167,48 @@
   pointer-events: none;
   overflow: hidden;
   background: #000;
-  animation: crt-through-out 1100ms ease-in forwards;
+  animation: crt-through-out 1000ms ease-in forwards;
+  will-change: opacity;
 }
-.crt-through-img {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  animation: crt-through-zoom 1100ms cubic-bezier(0.6, 0, 0.8, 0.4) forwards;
-}
+.crt-through-img,
+.crt-through-flash,
 .crt-through-lines {
   position: absolute;
   inset: 0;
+  will-change: transform, opacity;
+}
+.crt-through-img {
+  background-size: cover;
+  background-position: center;
+  animation: crt-through-zoom 1000ms cubic-bezier(0.6, 0, 0.8, 0.4) forwards;
+}
+.crt-through-flash {
+  background: radial-gradient(ellipse at center, #fff 0%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0) 75%);
+  opacity: 0;
+  animation: crt-through-flash 1000ms ease-in forwards;
+}
+.crt-through-lines {
   background: repeating-linear-gradient(transparent 0 2px, rgba(0, 0, 0, 0.35) 2px 4px);
-  animation: crt-through-lines 1100ms linear forwards;
+  animation: crt-through-lines 1000ms linear forwards;
 }
 @keyframes crt-through-zoom {
   0% {
     transform: scale(1);
-    filter: blur(0) brightness(1);
-  }
-  45% {
-    transform: scale(1.25);
-    filter: blur(1px) brightness(1.3);
-  }
-  70% {
-    transform: scale(2.4);
-    filter: blur(8px) brightness(3);
   }
   100% {
-    transform: scale(4);
-    filter: blur(20px) brightness(4);
+    transform: scale(3.2);
+  }
+}
+@keyframes crt-through-flash {
+  0%,
+  35% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 1;
   }
 }
 @keyframes crt-through-lines {
@@ -208,7 +219,7 @@
 }
 @keyframes crt-through-out {
   0%,
-  55% {
+  60% {
     opacity: 1;
   }
   100% {
