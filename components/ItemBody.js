@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useState } from 'react'
 import DemoVideo from './DemoVideo'
 
 // The content behind "use item". Every game frames it differently but the
@@ -30,6 +31,24 @@ function Media({ media }) {
       )}
       <figcaption className="ib-caption">{media.caption}</figcaption>
     </figure>
+  )
+}
+
+// Extra clips stay as posters until asked for, so a dozen videos never load at once
+function GalleryClip({ clip }) {
+  const [playing, setPlaying] = useState(false)
+  return (
+    <li className="ib-clip">
+      {playing ? (
+        <video src={clip.src} poster={clip.poster} autoPlay muted loop playsInline controls aria-label={clip.title} />
+      ) : (
+        <button type="button" onClick={() => setPlaying(true)} aria-label={`Play: ${clip.title}`}>
+          <img src={clip.poster} alt="" loading="lazy" width={960} height={600} />
+          <span className="ib-clip-play" aria-hidden="true" />
+        </button>
+      )}
+      <span className="ib-clip-title">{clip.title}</span>
+    </li>
   )
 }
 
@@ -73,6 +92,13 @@ export default function ItemBody({ item, showMedia = true }) {
       {showMedia && <Media media={p.media} />}
       <p className="ib-summary">{p.summary}</p>
       <p className="ib-details">{p.details}</p>
+      {p.gallery && (
+        <ul className="ib-gallery" aria-label="More clips">
+          {p.gallery.map((clip) => (
+            <GalleryClip key={clip.src} clip={clip} />
+          ))}
+        </ul>
+      )}
       <dl className="ib-stack">
         {p.stack.map(([layer, tools]) => (
           <div key={layer}>
