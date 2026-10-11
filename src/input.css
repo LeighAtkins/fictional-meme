@@ -43,42 +43,6 @@
     @apply btn border border-ink text-ink hover:bg-ink hover:text-paper;
   }
 
-  /* Faint drafting grid behind the hero, fading out towards the fold */
-  .drafting-grid {
-    background-image:
-      linear-gradient(theme('colors.rule') 1px, transparent 1px),
-      linear-gradient(90deg, theme('colors.rule') 1px, transparent 1px);
-    background-size: 32px 32px;
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 92%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 92%);
-  }
-
-  /* Dimension lines draw outwards from their label, once, on load */
-  .dim-draw-x {
-    animation: dim-draw-x 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 250ms both;
-  }
-
-  .dim-draw-y {
-    animation: dim-draw-y 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 550ms both;
-  }
-}
-
-@keyframes dim-draw-x {
-  from {
-    clip-path: inset(0 50% 0 50%);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes dim-draw-y {
-  from {
-    clip-path: inset(50% 0 50% 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -86,10 +50,6 @@
     scroll-behavior: auto;
   }
 
-  .dim-draw-x,
-  .dim-draw-y {
-    animation: none;
-  }
 }
 
 /* Shared layout for "use item" content; each game supplies colour and type */

@@ -1,0 +1,290 @@
+/* The résumé as an assembly drawing: a reading column on the left, and a
+   drawing sheet pinned beside it that fills the rest of the window. */
+
+.layout {
+  --sheet-gap: 14px;
+  --header: 57px;
+  display: grid;
+  grid-template-columns: minmax(22rem, 40%) minmax(0, 1fr);
+  grid-template-areas: 'text drawing';
+}
+
+.text {
+  grid-area: text;
+  min-width: 0;
+  padding: 0 clamp(1.5rem, 3vw, 3rem) 0 clamp(1.25rem, 5vw, 6rem);
+}
+
+.drawing {
+  grid-area: drawing;
+  position: sticky;
+  top: var(--header);
+  height: calc(100vh - var(--header));
+  height: calc(100dvh - var(--header));
+  align-self: start;
+  padding: var(--sheet-gap) var(--sheet-gap) var(--sheet-gap) 0;
+}
+
+/* The sheet: a ruled margin with zone markers, then the drawing frame */
+.sheet {
+  position: relative;
+  height: 100%;
+  background: #fff;
+  border: 1px solid theme('colors.rule');
+}
+
+.zonesTop,
+.zonesBottom,
+.zonesLeft,
+.zonesRight {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  font-family: var(--font-barlow-cond), sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  color: theme('colors.muted');
+  pointer-events: none;
+}
+
+.zonesTop,
+.zonesBottom {
+  left: 18px;
+  right: 18px;
+  height: 18px;
+  align-items: center;
+}
+
+.zonesTop {
+  top: 0;
+}
+
+.zonesBottom {
+  bottom: 0;
+}
+
+.zonesLeft,
+.zonesRight {
+  top: 18px;
+  bottom: 18px;
+  width: 18px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zonesLeft {
+  left: 0;
+}
+
+.zonesRight {
+  right: 0;
+}
+
+.frame {
+  position: absolute;
+  inset: 18px;
+  overflow: hidden;
+  border: 1.5px solid theme('colors.ink');
+}
+
+.gl,
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.shown {
+  opacity: 1;
+}
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-barlow-cond), sans-serif;
+  font-size: 0.95rem;
+  color: theme('colors.muted');
+}
+
+/* Notes, top left, the way a drawing carries them */
+.notes {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  max-width: min(22rem, 46%);
+  font-family: var(--font-barlow-cond), sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: theme('colors.ink');
+  pointer-events: none;
+}
+
+.notesHead {
+  font-weight: 500;
+  color: theme('colors.muted');
+}
+
+.note {
+  margin-top: 0.15rem;
+  animation: note-in 450ms ease both;
+}
+
+@keyframes note-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* Title block, bottom right */
+.title {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, auto) minmax(4.5rem, auto);
+  width: min(25rem, 70%);
+  background: #fff;
+  border-top: 1.5px solid theme('colors.ink');
+  border-left: 1.5px solid theme('colors.ink');
+  font-family: var(--font-barlow-cond), sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  color: theme('colors.ink');
+}
+
+.title > div {
+  padding: 0.3rem 0.55rem;
+  border-right: 1px solid theme('colors.rule');
+  border-bottom: 1px solid theme('colors.rule');
+}
+
+.title dt {
+  font-size: 0.7rem;
+  color: theme('colors.muted');
+}
+
+.title dd {
+  font-weight: 500;
+}
+
+.titleName {
+  grid-column: span 3;
+}
+
+.titleName dd {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.titleName strong {
+  font-family: var(--font-barlow-semi), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.titleName span {
+  color: theme('colors.muted');
+}
+
+.titleSheet dd {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.titleWide {
+  grid-column: span 2;
+}
+
+.titleStep {
+  grid-column: span 2;
+}
+
+.titleStep dd {
+  color: theme('colors.dim');
+}
+
+/* Narrow screens: the sheet becomes a band pinned under the header */
+@media (max-width: 1023px) {
+  .layout {
+    display: block;
+  }
+
+  .drawing {
+    z-index: 20;
+    height: 42vh;
+    height: 42svh;
+    padding: 6px;
+    background: theme('colors.paper');
+    border-bottom: 1px solid theme('colors.rule');
+  }
+
+  .zonesTop,
+  .zonesBottom,
+  .zonesLeft,
+  .zonesRight,
+  .notes {
+    display: none;
+  }
+
+  .frame {
+    inset: 0;
+    border-width: 1px;
+  }
+
+  .title {
+    grid-template-columns: auto auto auto;
+    width: auto;
+    font-size: 0.72rem;
+  }
+
+  .titleName,
+  .titleWide,
+  .title > div:nth-last-child(-n + 3) {
+    display: none;
+  }
+
+  .titleStep {
+    grid-column: auto;
+  }
+
+  .text {
+    padding: 0 1.25rem;
+  }
+}
+
+/* No WebGL: the résumé reads as a single column */
+.flat {
+  display: block;
+}
+
+.flat .drawing {
+  display: none;
+}
+
+@media print {
+  .layout {
+    display: block;
+  }
+
+  .drawing {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gl,
+  .overlay {
+    transition: none;
+  }
+
+  .note {
+    animation: none;
+  }
+}

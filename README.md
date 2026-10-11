@@ -10,7 +10,7 @@ Portfolio of Leigh Atkins, full-stack developer, built as a video-game item box.
 | Super Leigh 64 | Super Mario 64 | Run around the castle hall and jump into project paintings for their stars |
 | Mass Deploy 2 | Mass Effect 2 | A Citadel elevator ride with the news covering each project, then the squad screen and conversation wheel |
 
-`/resume` is the plain version for anyone in a hurry.
+`/resume` is the quicker read: the résumé as an assembly drawing. As you scroll, SofaPaint's own parametric sofa model (ported from OpenPaint's `sofa3d` module) goes together one part per section, plotted as ink lines with real measuring-guide dimensions (A1, B1, C1…) and the same fit checks SofaPaint Desktop runs.
 
 All artwork is drawn for this site (SVG item icons, CSS scenes) or processed from Leigh's own photos. Sound effects are synthesised with Web Audio. Fan homages; not affiliated with Nintendo, Capcom, Bethesda or Electronic Arts.
 
@@ -18,6 +18,7 @@ All artwork is drawn for this site (SVG item icons, CSS scenes) or processed fro
 
 - `lib/data.js`: every project, skill and link, shared by all games and the résumé
 - `lib/three/room.js`: the living room, consoles and the insert animation (loaded after the page's words render)
+- `lib/sofa/`: the résumé drawing: the ported sofa model and geometry, and the line-drawing renderer
 - `lib/three/world.js`: the small third-person engine behind the Ocarina field and the Mario hall
 - `themes/*.js`: one file (plus a CSS module) per game
 - `lib/arcade.js`: sound, secrets, the Konami code and saved inventory order

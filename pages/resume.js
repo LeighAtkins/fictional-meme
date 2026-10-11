@@ -1,10 +1,9 @@
 import { Barlow, Barlow_Condensed, Barlow_Semi_Condensed } from 'next/font/google'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
 import DemoVideo from '../components/DemoVideo'
-import { DimensionH, DimensionV } from '../components/Dimension'
-import { EMAIL, SITE_URL, items, profile } from '../lib/data'
+import SofaAssembly from '../components/SofaAssembly'
+import { EMAIL, GITHUB, LINKEDIN, SITE_URL, items, profile } from '../lib/data'
 
 // The résumé keeps its own typeface, so the game pages never download it
 const barlow = Barlow({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-barlow' })
@@ -25,7 +24,7 @@ function ProjectMedia({ media }) {
   if (media.kind === 'portrait') {
     return (
       <figure>
-        <div className="grid max-w-xl grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 gap-3">
           <DemoVideo src={media.src} poster={media.poster} label={media.label} width={540} height={960} />
           {media.src2 ? (
             <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={540} height={960} />
@@ -35,7 +34,7 @@ function ProjectMedia({ media }) {
             </div>
           )}
         </div>
-        <figcaption className="mt-3 text-sm text-muted">{media.caption}</figcaption>
+        <figcaption className="mt-2 text-sm text-muted">{media.caption}</figcaption>
       </figure>
     )
   }
@@ -44,30 +43,16 @@ function ProjectMedia({ media }) {
     <figure>
       <DemoVideo src={media.src} poster={media.poster} label={media.label} width={960} height={600} />
       {media.src2 && (
-        <div className="mt-4 w-3/4">
+        <div className="mt-3 w-3/4">
           <DemoVideo src={media.src2} poster={media.poster2} label={media.label2} width={960} height={600} />
         </div>
       )}
-      <figcaption className="mt-3 text-sm text-muted">{media.caption}</figcaption>
+      <figcaption className="mt-2 text-sm text-muted">{media.caption}</figcaption>
     </figure>
   )
 }
 
-export default function Home() {
-  // The hero headline is measured live, the way SofaPaint measures a sofa
-  const headlineRef = useRef(null)
-  const [size, setSize] = useState(null)
-
-  useEffect(() => {
-    const el = headlineRef.current
-    if (!el) return
-    const observer = new ResizeObserver(() => {
-      setSize({ width: Math.round(el.offsetWidth), height: Math.round(el.offsetHeight) })
-    })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
+export default function Resume() {
   return (
     <div className={`${barlow.variable} ${barlowSemi.variable} ${barlowCond.variable} font-sans`}>
       <Head>
@@ -80,7 +65,7 @@ export default function Home() {
         <link rel="manifest" href="/site.webmanifest" />
 
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:url" content={`${SITE_URL}/resume`} />
         <meta property="og:title" content={TITLE} />
         <meta property="og:description" content={DESCRIPTION} />
         <meta property="og:image" content={`${SITE_URL}/media/sofapaint-generation.jpg`} />
@@ -102,10 +87,7 @@ export default function Home() {
               url: SITE_URL,
               image: `${SITE_URL}/leigh-atkins-photo.jpg`,
               email: `mailto:${EMAIL}`,
-              sameAs: [
-                'https://github.com/LeighAtkins',
-                'https://www.linkedin.com/in/leigh-atkins-0069a731a/',
-              ],
+              sameAs: [GITHUB, LINKEDIN],
             }),
           }}
         />
@@ -118,8 +100,8 @@ export default function Home() {
         Skip to work
       </a>
 
-      <header className="sticky top-0 z-40 border-b border-rule bg-paper">
-        <nav aria-label="Main" className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+      <header data-site-header className="sticky top-0 z-40 border-b border-rule bg-paper">
+        <nav aria-label="Main" className="flex items-center justify-between py-4 pl-[clamp(1.25rem,5vw,6rem)] pr-5 sm:pr-8">
           <a href="#top" className="font-display text-xl font-semibold">
             Leigh Atkins
           </a>
@@ -149,33 +131,15 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="relative">
-          <div className="drafting-grid pointer-events-none absolute inset-0" />
-          <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-14 sm:px-8 sm:pb-28 sm:pt-20">
-            <div className="w-fit">
-              <DimensionH label="A1" value={size && `${size.width} px`} className="mb-4" />
-              <div className="relative">
-                <h1
-                  ref={headlineRef}
-                  className="font-display text-[clamp(2.25rem,9.5vw,5.75rem)] font-semibold leading-[0.98] tracking-[-0.01em]"
-                >
-                  <span className="block whitespace-nowrap">Software for sofas,</span>
-                  <span className="block whitespace-nowrap">parcels, floor plans</span>
-                  <span className="block whitespace-nowrap">and fairways.</span>
-                </h1>
-                <DimensionV
-                  label="B1"
-                  value={size && `${size.height} px`}
-                  className="absolute inset-y-0 left-full hidden lg:flex"
-                />
-              </div>
-            </div>
-
-            <p className="mt-8 max-w-[38rem] text-xl leading-relaxed text-muted">
+        <SofaAssembly>
+          <section data-step="0" className="pb-16 pt-12 sm:pt-16 lg:min-h-[calc(100vh-57px)] lg:pb-24 lg:pt-20">
+            <h1 className="font-display text-[clamp(2.4rem,3.9vw,3.6rem)] font-semibold leading-[0.98] tracking-[-0.01em]">
+              Software for sofas, parcels, floor plans and fairways.
+            </h1>
+            <p className="mt-7 max-w-[34rem] text-xl leading-relaxed text-muted">
               I’m {profile.name}, a full-stack developer. {profile.pitch}
             </p>
-
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <a href="#work" className="btn-solid">
                 See the work
               </a>
@@ -183,69 +147,55 @@ export default function Home() {
                 Email me
               </a>
             </div>
-          </div>
-        </section>
+            <p className="mt-10 max-w-[30rem] text-base text-muted">
+              The drawing is SofaPaint’s own sofa model. It goes together as you scroll, one part per section.
+            </p>
+          </section>
 
-        <section id="work" aria-labelledby="work-heading" className="border-t border-ink">
-          <div className="mx-auto max-w-6xl px-5 sm:px-8">
-            <h2 id="work-heading" className="pt-12 font-display text-2xl font-semibold text-muted sm:pt-16">
-              Recent work
-            </h2>
-
-            {projects.map((project) => (
-              <article
-                key={project.id}
-                id={project.id}
-                className="grid gap-8 border-b border-rule py-12 last:border-b-0 sm:py-16 lg:grid-cols-12 lg:gap-12"
-              >
-                <div className="lg:col-span-7">
+          <div id="work" className="border-t border-ink">
+            <h2 className="pt-10 font-display text-2xl font-semibold text-muted">Recent work</h2>
+            {projects.map((project, i) => (
+              <article key={project.id} id={project.id} data-step={i + 1} className="border-b border-rule py-12 last:border-b-0 sm:py-14">
+                <h3 className="font-display text-4xl font-semibold leading-none">{project.name}</h3>
+                <p className="mt-2 font-label text-base font-medium text-muted">{project.status}</p>
+                <p className="mt-2 font-display text-xl font-medium text-dim">{project.tagline}</p>
+                <div className="mt-6">
                   <ProjectMedia media={project.media} />
                 </div>
+                <p className="mt-6">{project.summary}</p>
+                <p className="mt-4 text-muted">{project.details}</p>
 
-                <div className="lg:col-span-5">
-                  <h3 className="font-display text-4xl font-semibold leading-none sm:text-5xl">{project.name}</h3>
-                  {project.status && <p className="mt-2 font-label text-base font-medium text-muted">{project.status}</p>}
-                  <p className="mt-3 font-display text-xl font-medium text-dim">{project.tagline}</p>
-                  <p className="mt-5">{project.summary}</p>
-                  <p className="mt-4 text-muted">{project.details}</p>
+                <dl className="mt-6 border-t border-ink text-base">
+                  {project.stack.map(([layer, tools]) => (
+                    <div key={layer} className="grid grid-cols-[6.5rem_1fr] gap-4 border-b border-rule py-2">
+                      <dt className="font-label font-medium text-muted">{layer}</dt>
+                      <dd>{tools}</dd>
+                    </div>
+                  ))}
+                </dl>
 
-                  <dl className="mt-7 border-t border-ink text-base">
-                    {project.stack.map(([layer, tools]) => (
-                      <div key={layer} className="grid grid-cols-[6.5rem_1fr] gap-4 border-b border-rule py-2">
-                        <dt className="font-label font-medium text-muted">{layer}</dt>
-                        <dd>{tools}</dd>
-                      </div>
-                    ))}
-                  </dl>
-
-                  <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-display font-semibold">
-                    {project.links.map((link) => (
-                      <li key={link.href}>
-                        <a href={link.href} target="_blank" rel="noopener noreferrer" className="link">
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                  {project.note && <p className="mt-3 text-sm text-muted">{project.note}</p>}
-                </div>
+                <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-display font-semibold">
+                  {project.links.map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} target="_blank" rel="noopener noreferrer" className="link">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                {project.note && <p className="mt-3 text-sm text-muted">{project.note}</p>}
               </article>
             ))}
           </div>
-        </section>
 
-        <section aria-labelledby="other-heading" className="border-t border-ink">
-          <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+          <section data-step={projects.length + 1} aria-labelledby="other-heading" className="border-t border-ink py-12 sm:py-14 lg:min-h-[70vh]">
             <h2 id="other-heading" className="font-display text-2xl font-semibold text-muted">
               Earlier projects
             </h2>
-            <ul className="mt-6 border-t border-rule">
+            <ul className="mt-5 border-t border-rule">
               {otherWork.map((item) => (
-                <li
-                  key={item.name}
-                  className="grid gap-x-8 gap-y-1 border-b border-rule py-4 md:grid-cols-[14rem_1fr_16rem]"
-                >
-                  <span className="font-display text-lg font-semibold">
+                <li key={item.name} className="border-b border-rule py-4">
+                  <p className="font-display text-lg font-semibold">
                     {item.href ? (
                       <a href={item.href} target="_blank" rel="noopener noreferrer" className="link">
                         {item.name}
@@ -253,18 +203,19 @@ export default function Home() {
                     ) : (
                       item.name
                     )}
-                  </span>
-                  <span>{item.description}</span>
-                  <span className="font-label text-muted md:text-right">{item.stack}</span>
+                  </p>
+                  <p className="mt-1">{item.description}</p>
+                  <p className="mt-1 font-label text-muted">{item.stack}</p>
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
+          </section>
 
-        <section id="about" aria-labelledby="about-heading" className="border-t border-ink">
-          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 sm:py-16 md:grid-cols-12">
-            <div className="md:col-span-4 lg:col-span-3">
+          <section id="about" data-step={projects.length + 2} aria-labelledby="about-heading" className="border-t border-ink py-12 sm:py-14 lg:min-h-[100vh]">
+            <h2 id="about-heading" className="font-display text-2xl font-semibold text-muted">
+              About
+            </h2>
+            <div className="mt-6 grid gap-6 sm:grid-cols-[9rem_1fr]">
               <img
                 src="/me/portrait.webp"
                 alt="Leigh Atkins"
@@ -272,21 +223,18 @@ export default function Home() {
                 height={768}
                 loading="lazy"
                 decoding="async"
-                className="w-3/5 rounded border border-ink md:w-full"
+                className="w-36 rounded border border-ink"
               />
+              <div>
+                <p className="text-xl leading-relaxed">{profile.about[0]}</p>
+                <p className="mt-5 text-muted">{profile.about[1]}</p>
+              </div>
             </div>
-            <div className="max-w-[40rem] md:col-span-8 lg:col-span-9">
-              <h2 id="about-heading" className="font-display text-2xl font-semibold text-muted">
-                About
-              </h2>
-              <p className="mt-6 text-xl leading-relaxed">{profile.about[0]}</p>
-              <p className="mt-5 text-muted">{profile.about[1]}</p>
-            </div>
-          </div>
-        </section>
+          </section>
+        </SofaAssembly>
 
         <section id="contact" aria-labelledby="contact-heading" className="border-t border-ink bg-ink text-paper">
-          <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+          <div className="py-14 pl-[clamp(1.25rem,5vw,6rem)] pr-5 sm:py-20 sm:pr-8">
             <h2 id="contact-heading" className="font-display text-2xl font-semibold text-rule">
               Contact
             </h2>
@@ -300,22 +248,12 @@ export default function Home() {
             </p>
             <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-2 font-display text-lg font-medium">
               <li>
-                <a
-                  href="https://github.com/LeighAtkins"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-rule/50 underline-offset-4 hover:decoration-paper"
-                >
+                <a href={GITHUB} target="_blank" rel="noopener noreferrer" className="underline decoration-rule/50 underline-offset-4 hover:decoration-paper">
                   GitHub
                 </a>
               </li>
               <li>
-                <a
-                  href="https://www.linkedin.com/in/leigh-atkins-0069a731a/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-rule/50 underline-offset-4 hover:decoration-paper"
-                >
+                <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="underline decoration-rule/50 underline-offset-4 hover:decoration-paper">
                   LinkedIn
                 </a>
               </li>
