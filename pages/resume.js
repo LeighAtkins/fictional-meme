@@ -101,11 +101,11 @@ export default function Resume() {
       </a>
 
       <header data-site-header className="sticky top-0 z-40 border-b border-rule bg-paper">
-        <nav aria-label="Main" className="flex items-center justify-between py-4 pl-[clamp(1.25rem,5vw,6rem)] pr-5 sm:pr-8">
-          <a href="#top" className="font-display text-xl font-semibold">
+        <nav aria-label="Main" className="flex items-center justify-between gap-3 whitespace-nowrap py-3 pl-[clamp(1.25rem,5vw,6rem)] pr-5 sm:py-4 sm:pr-8">
+          <a href="#top" className="font-display text-lg font-semibold sm:text-xl">
             Leigh Atkins
           </a>
-          <ul className="flex gap-5 font-display text-base font-medium sm:gap-8">
+          <ul className="flex gap-3.5 font-display text-[0.95rem] font-medium min-[400px]:gap-5 sm:gap-8 sm:text-base">
             <li>
               <a href="#work" className="hover:text-dim">
                 Work

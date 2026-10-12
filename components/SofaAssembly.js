@@ -25,38 +25,76 @@ export default function SofaAssembly({ children }) {
   const drawRef = useRef(null)
   const glRef = useRef(null)
   const overlayRef = useRef(null)
+  const stepperRef = useRef(null)
   const api = useRef(null)
-  const metrics = useRef({ sections: [], anchor: 0 })
+  const metrics = useRef({ sections: [], anchor: 0, cover: 0, end: 0 })
   const [step, setStep] = useState(0)
   const [facts, setFacts] = useState(null)
   const [state, setState] = useState('loading')
   const [labels, setLabels] = useState([])
-  // On phones the drawing is a small card that opens into the full sheet
+  // On phones the drawing is a bar along the bottom that opens into the full
+  // sheet; on the way down the header gives way to the row of steps, and the
+  // bar tucks away once the résumé ends
   const [open, setOpen] = useState(false)
+  const [hide, setHide] = useState(false)
+  const [tucked, setTucked] = useState(false)
   const jump = useRef(() => {})
 
   useEffect(() => {
     let cancelled = false
     let frame = 0
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const narrow = window.matchMedia('(max-width: 1023px)')
     const draw = drawRef.current
+    const layout = layoutRef.current
 
     const measure = () => {
       const header = document.querySelector('[data-site-header]')
-      const headerH = header ? header.getBoundingClientRect().height : 0
+      const headerH = header ? header.offsetHeight : 0
+      const stepper = stepperRef.current
+      layout.style.setProperty('--header', `${headerH}px`)
       const rect = draw.getBoundingClientRect()
-      // The line that decides progress: the middle of the reading area
-      metrics.current.anchor = headerH + (window.innerHeight - headerH) * 0.5
+      // The line that decides progress: the middle of the reading area, or on
+      // phones low on the screen, so a step builds as its heading comes up
+      metrics.current.anchor = narrow.matches ? window.innerHeight * 0.8 : headerH + (window.innerHeight - headerH) * 0.5
+      // What covers the top of the page on phones: the steps, and the header
+      // too when the page is going up
+      metrics.current.header = headerH
+      metrics.current.cover = stepper?.offsetHeight || 0
       const y = window.scrollY
-      metrics.current.sections = [...layoutRef.current.querySelectorAll('[data-step]')].map((el) => {
+      metrics.current.end = layout.getBoundingClientRect().bottom + y
+      metrics.current.sections = [...layout.querySelectorAll('[data-step]')].map((el) => {
         const r = el.getBoundingClientRect()
         return { top: r.top + y, h: Math.max(1, r.height), label: el.dataset.label }
       })
       api.current?.resize(rect.width, rect.height)
     }
 
+    // Which way the page is going, and how far since it last turned
+    let lastY = window.scrollY
+    let dir = 0
+    let travel = 0
+    const chrome = (y) => {
+      const dy = y - lastY
+      lastY = y
+      if (!narrow.matches) {
+        setHide(false)
+        setTucked(false)
+        return
+      }
+      if (dy) {
+        if (dy > 0 !== dir > 0) travel = 0
+        dir = dy
+        travel += Math.abs(dy)
+      }
+      if (y < 80) setHide(false)
+      else if (travel > 24) setHide(dir > 0)
+      setTucked(y + window.innerHeight > metrics.current.end + 40)
+    }
+
     const update = () => {
       frame = 0
+      chrome(window.scrollY)
       const { sections, anchor } = metrics.current
       if (!api.current || !sections.length) return
       const y = window.scrollY + anchor
@@ -73,11 +111,15 @@ export default function SofaAssembly({ children }) {
       api.current.setTarget(t)
     }
     // A numbered step scrolls to its section, a little past the point where
-    // its parts land, and the drawing builds (or unbuilds) on the way there
+    // its parts land, and the drawing builds (or unbuilds) on the way there.
+    // Phones land the section's heading just under the steps
     jump.current = (k) => {
       const sec = metrics.current.sections[k]
       if (!sec) return
-      const top = sec.top - metrics.current.anchor + (k === 0 ? 0 : Math.min(sec.h * 0.32, 420))
+      const { cover, header, anchor } = metrics.current
+      let top = narrow.matches ? sec.top - cover - 12 : sec.top - anchor + Math.min(sec.h * 0.32, 420)
+      if (narrow.matches && top < window.scrollY) top -= header
+      if (k === 0) top = 0
       window.scrollTo({ top: Math.max(0, top), behavior: reduced ? 'auto' : 'smooth' })
     }
 
@@ -98,6 +140,13 @@ export default function SofaAssembly({ children }) {
     }
     const onLeave = () => api.current?.setPointer(0, 0)
 
+    // The steps work as navigation before the drawing has loaded
+    measure()
+    setLabels(metrics.current.sections.map((sec) => sec.label))
+    ro.observe(layout)
+    ro.observe(draw)
+    window.addEventListener('scroll', onScroll, { passive: true })
+
     import('../lib/sofa/assembly')
       .then(({ createAssembly }) =>
         createAssembly({ canvas: glRef.current, overlay: overlayRef.current, fontEl: layoutRef.current, reduced, onStep: setStep })
@@ -109,11 +158,7 @@ export default function SofaAssembly({ children }) {
         setFacts(a.facts)
         measure()
         update()
-        setLabels(metrics.current.sections.map((sec) => sec.label))
-        ro.observe(layoutRef.current)
-        ro.observe(draw)
         io.observe(draw)
-        window.addEventListener('scroll', onScroll, { passive: true })
         if (fine) {
           draw.addEventListener('pointermove', onPointer)
           draw.addEventListener('pointerleave', onLeave)
@@ -149,6 +194,12 @@ export default function SofaAssembly({ children }) {
             : '')
 
   useEffect(() => {
+    const header = document.querySelector('[data-site-header]')
+    header?.toggleAttribute('data-hidden', hide && !open)
+    return () => header?.removeAttribute('data-hidden')
+  }, [hide, open])
+
+  useEffect(() => {
     if (!open) return
     const onKey = (e) => e.key === 'Escape' && setOpen(false)
     window.addEventListener('keydown', onKey)
@@ -159,14 +210,48 @@ export default function SofaAssembly({ children }) {
     jump.current(k)
   }
 
+  const balloons = (
+    <ol>
+      {labels.map((label, k) => (
+        <li key={k}>
+          <button
+            type="button"
+            onClick={() => choose(k)}
+            aria-current={k === step ? 'step' : undefined}
+            className={`${s.balloon} ${k < step ? s.done : ''} ${k === step ? s.current : ''}`}
+            title={`${k + 1}. ${STEPS[k]}: ${label}`}
+            aria-label={`Step ${k + 1}, ${STEPS[k]}: go to ${label}`}
+          >
+            {k + 1}
+          </button>
+        </li>
+      ))}
+    </ol>
+  )
+
   return (
-    <div ref={layoutRef} className={`${s.layout} ${state === 'failed' ? s.flat : ''} ${open ? s.open : ''}`}>
+    <div
+      ref={layoutRef}
+      className={`${s.layout} ${state === 'failed' ? s.flat : ''} ${open ? s.open : ''} ${hide && !open ? s.lifted : ''} ${tucked && !open ? s.tucked : ''}`}
+    >
+      {/* Phones: the steps ride under the header, and stay when it slides away */}
+      {labels.length > 0 && (
+        <nav ref={stepperRef} className={s.stepper} aria-label="Résumé sections">
+          {balloons}
+        </nav>
+      )}
       <div ref={drawRef} className={s.drawing}>
-        {/* The card on phones: the whole drawing is the button that opens it */}
+        {/* The bar on phones: the whole drawing is the button that opens it */}
         <button type="button" className={s.cardButton} onClick={() => setOpen(true)} aria-label={`Open the assembly drawing, sheet ${step + 1} of ${STEPS.length}: ${STEPS[step]}`}>
           <span className={s.cardChip}>
-            {step + 1}/{STEPS.length} · {STEPS[step]}
+            <span className={s.cardCount}>
+              Step {step + 1} of {STEPS.length}
+            </span>
+            <span className={s.cardStep}>{STEPS[step]}</span>
           </span>
+          <svg className={s.cardOpen} viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9" />
+          </svg>
         </button>
         <button type="button" className={s.close} onClick={() => setOpen(false)}>
           Close
@@ -182,22 +267,7 @@ export default function SofaAssembly({ children }) {
 
             {labels.length > 0 && (
               <nav className={s.rail} aria-label="Assembly steps">
-                <ol>
-                  {labels.map((label, k) => (
-                    <li key={k}>
-                      <button
-                        type="button"
-                        onClick={() => choose(k)}
-                        aria-current={k === step ? 'step' : undefined}
-                        className={`${s.balloon} ${k < step ? s.done : ''} ${k === step ? s.current : ''}`}
-                        title={`${k + 1}. ${STEPS[k]}: ${label}`}
-                        aria-label={`Step ${k + 1}, ${STEPS[k]}: go to ${label}`}
-                      >
-                        {k + 1}
-                      </button>
-                    </li>
-                  ))}
-                </ol>
+                {balloons}
                 <p className={s.railLabel}>
                   {STEPS[step]}
                   {labels[step] ? <span> · {labels[step]}</span> : null}

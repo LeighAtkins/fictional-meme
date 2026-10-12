@@ -280,8 +280,11 @@
   color: theme('colors.dim');
 }
 
-/* Narrow screens: the drawing is a small live card in the corner, so the
-   résumé keeps the whole screen; tapping it opens the full sheet */
+/* Narrow screens: a row of steps under the header, and the drawing as a slim
+   live bar along the bottom, so the résumé keeps the screen. Scrolling down
+   slides the header away and the steps take its place; tapping the bar opens
+   the full sheet */
+.stepper,
 .cardButton,
 .close {
   display: none;
@@ -289,7 +292,35 @@
 
 @media (max-width: 1023px) {
   .layout {
+    --bar: 76px;
     display: block;
+  }
+
+  .stepper {
+    position: sticky;
+    top: var(--header);
+    z-index: 35;
+    display: block;
+    padding: 7px 1.25rem;
+    background: theme('colors.paper');
+    border-bottom: 1px solid theme('colors.rule');
+    transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .stepper ol {
+    display: flex;
+    justify-content: space-between;
+    max-width: 26rem;
+    margin: 0 auto;
+  }
+
+  .stepper .balloon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .lifted .stepper {
+    transform: translateY(calc(-1 * var(--header)));
   }
 
   .drawing {
@@ -298,24 +329,28 @@
     /* Fixed boxes honour alignment now; let the opened sheet stretch */
     align-self: auto;
     top: auto;
-    left: auto;
-    right: 12px;
-    bottom: 12px;
-    width: min(40vw, 172px);
-    height: auto;
-    aspect-ratio: 4 / 3;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--bar) + env(safe-area-inset-bottom));
     padding: 0;
+    transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .tucked .drawing {
+    transform: translateY(100%);
   }
 
   .sheet {
     overflow: hidden;
-    border: 1px solid theme('colors.ink');
-    border-radius: 8px;
-    box-shadow: 0 8px 28px rgba(20, 35, 59, 0.18);
+    border: 0;
+    border-top: 1px solid theme('colors.ink');
+    box-shadow: 0 -6px 24px rgba(20, 35, 59, 0.1);
   }
 
+  /* The sofa takes the right of the bar; the step reads on the left */
   .frame {
-    inset: 0;
+    inset: 0 0 env(safe-area-inset-bottom) 8.5rem;
     border: 0;
   }
 
@@ -337,43 +372,72 @@
     z-index: 3;
     display: block;
     width: 100%;
-    border-radius: 8px;
+    text-align: left;
   }
 
   .cardButton:focus-visible {
     outline: 2px solid theme('colors.dim');
-    outline-offset: 2px;
+    outline-offset: -3px;
   }
 
   .cardChip {
     position: absolute;
-    left: 6px;
-    bottom: 6px;
-    padding: 0.1rem 0.4rem;
-    border: 1px solid theme('colors.rule');
-    border-radius: 999px;
-    background: #fff;
+    left: 1.25rem;
+    top: calc(var(--bar) / 2);
+    width: 7rem;
+    transform: translateY(-50%);
+    line-height: 1.15;
+  }
+
+  .cardCount {
+    display: block;
     font-family: var(--font-barlow-cond), sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     font-weight: 500;
+    color: theme('colors.muted');
+  }
+
+  .cardStep {
+    display: block;
+    margin-top: 0.1rem;
+    font-family: var(--font-barlow-semi), sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
     color: theme('colors.ink');
+  }
+
+  .cardOpen {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: theme('colors.muted');
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   /* Opened: the full sheet over the page, under the header */
   .open .drawing {
+    z-index: 36;
     top: var(--header);
     left: 0;
     right: 0;
     bottom: 0;
-    width: auto;
-    aspect-ratio: auto;
+    height: auto;
     padding: 8px;
     background: theme('colors.paper');
   }
 
   .open .sheet {
-    border-radius: 0;
+    border: 1px solid theme('colors.ink');
     box-shadow: none;
+  }
+
+  .open .frame {
+    inset: 0;
   }
 
   .open .cardButton {
@@ -434,7 +498,8 @@
   display: block;
 }
 
-.flat .drawing {
+.flat .drawing,
+.flat .stepper {
   display: none;
 }
 
@@ -443,14 +508,17 @@
     display: block;
   }
 
-  .drawing {
+  .drawing,
+  .stepper {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .gl,
-  .overlay {
+  .overlay,
+  .stepper,
+  .drawing {
     transition: none;
   }
 
