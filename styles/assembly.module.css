@@ -340,6 +340,10 @@
 
   .tucked .drawing {
     transform: translateY(100%);
+    opacity: 0;
+    transition:
+      transform 600ms cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 450ms ease;
   }
 
   .sheet {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Barlow, Barlow_Condensed, Barlow_Semi_Condensed } from 'next/font/google'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -53,6 +54,17 @@ function ProjectMedia({ media }) {
 }
 
 export default function Resume() {
+  // Contact's lines come in from the side as the band scrolls into view
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]')
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && e.target.setAttribute('data-shown', '')),
+      { rootMargin: '0px 0px -12% 0px' }
+    )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
   return (
     <div className={`${barlow.variable} ${barlowSemi.variable} ${barlowCond.variable} font-sans`}>
       <Head>
@@ -238,12 +250,14 @@ export default function Resume() {
           </section>
         </SofaAssembly>
 
-        <section id="contact" aria-labelledby="contact-heading" className="border-t border-ink bg-ink text-paper">
-          <div className="py-14 pl-[clamp(1.25rem,5vw,6rem)] pr-5 sm:py-20 sm:pr-8">
-            <h2 id="contact-heading" className="font-display text-2xl font-semibold text-rule">
+        <section id="contact" aria-labelledby="contact-heading" className="bg-ink text-paper">
+          {/* The paper darkens into the band rather than cutting to it */}
+          <div aria-hidden="true" className="h-40 bg-gradient-to-b from-paper to-ink sm:h-56" />
+          <div className="pb-14 pl-[clamp(1.25rem,5vw,6rem)] pr-5 sm:pb-20 sm:pr-8">
+            <h2 id="contact-heading" data-reveal className="font-display text-2xl font-semibold text-rule">
               Contact
             </h2>
-            <p className="mt-5">
+            <p className="mt-5" data-reveal style={{ transitionDelay: '120ms' }}>
               <a
                 href={`mailto:${EMAIL}`}
                 className="break-all font-display text-[clamp(1.75rem,6vw,3.75rem)] font-semibold leading-tight underline decoration-dim decoration-4 underline-offset-8 hover:decoration-paper"
@@ -251,7 +265,7 @@ export default function Resume() {
                 {EMAIL}
               </a>
             </p>
-            <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-2 font-display text-lg font-medium">
+            <ul data-reveal style={{ transitionDelay: '240ms' }} className="mt-8 flex flex-wrap gap-x-8 gap-y-2 font-display text-lg font-medium">
               <li>
                 <a href={GITHUB} target="_blank" rel="noopener noreferrer" className="underline decoration-rule/50 underline-offset-4 hover:decoration-paper">
                   GitHub
@@ -263,7 +277,7 @@ export default function Resume() {
                 </a>
               </li>
             </ul>
-            <p className="mt-14 text-sm text-rule">© {new Date().getFullYear()} Leigh Atkins</p>
+            <p data-reveal style={{ transitionDelay: '340ms' }} className="mt-14 text-sm text-rule">© {new Date().getFullYear()} Leigh Atkins</p>
           </div>
         </section>
       </main>
