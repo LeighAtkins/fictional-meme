@@ -43,6 +43,11 @@
     @apply btn border border-ink text-ink hover:bg-ink hover:text-paper;
   }
 
+  /* A drawing balloon: the section's step in the résumé's assembly drawing */
+  .balloon {
+    @apply inline-grid h-7 w-7 flex-none place-items-center rounded-full border-[1.5px] border-ink bg-sheet font-label text-base font-medium leading-none text-ink;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

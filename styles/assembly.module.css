@@ -3,7 +3,7 @@
 
 .layout {
   --sheet-gap: 14px;
-  --header: 57px;
+  --header: 61px;
   display: grid;
   grid-template-columns: minmax(22rem, 40%) minmax(0, 1fr);
   grid-template-areas: 'text drawing';
@@ -141,6 +141,76 @@
   }
 }
 
+/* Numbered steps: pick one and the page scrolls there as the sofa builds */
+.rail {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.rail ol {
+  display: flex;
+  gap: 5px;
+}
+
+.balloon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid theme('colors.rule');
+  background: #fff;
+  font-family: var(--font-barlow-cond), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: theme('colors.muted');
+  transition:
+    background 200ms,
+    color 200ms,
+    border-color 200ms;
+}
+
+.balloon:hover {
+  border-color: theme('colors.dim');
+  color: theme('colors.dim');
+}
+
+.balloon:focus-visible {
+  outline: 2px solid theme('colors.dim');
+  outline-offset: 2px;
+}
+
+.done {
+  border-color: theme('colors.ink');
+  color: theme('colors.ink');
+}
+
+.current {
+  border-color: theme('colors.ink');
+  background: theme('colors.ink');
+  color: #fff;
+}
+
+.current:hover {
+  color: #fff;
+}
+
+.railLabel {
+  font-family: var(--font-barlow-cond), sans-serif;
+  font-size: 0.85rem;
+  color: theme('colors.dim');
+}
+
+.railLabel span {
+  color: theme('colors.muted');
+}
+
 /* Title block, bottom right */
 .title {
   position: absolute;
@@ -210,26 +280,42 @@
   color: theme('colors.dim');
 }
 
-/* Narrow screens: the drawing sits behind the text as a faint backdrop, with
-   no dimensions or sheet furniture, so the résumé gets the whole screen */
+/* Narrow screens: the drawing is a small live card in the corner, so the
+   résumé keeps the whole screen; tapping it opens the full sheet */
+.cardButton,
+.close {
+  display: none;
+}
+
 @media (max-width: 1023px) {
   .layout {
     display: block;
   }
 
   .drawing {
-    z-index: 0;
-    height: calc(100vh - var(--header));
-    height: calc(100svh - var(--header));
-    /* Pinned, but takes no room: the text scrolls over it */
-    margin-bottom: calc(-100vh + var(--header));
-    margin-bottom: calc(-100svh + var(--header));
+    position: fixed;
+    z-index: 30;
+    /* Fixed boxes honour alignment now; let the opened sheet stretch */
+    align-self: auto;
+    top: auto;
+    left: auto;
+    right: 12px;
+    bottom: 12px;
+    width: min(40vw, 172px);
+    height: auto;
+    aspect-ratio: 4 / 3;
     padding: 0;
-    pointer-events: none;
   }
 
   .sheet {
-    background: transparent;
+    overflow: hidden;
+    border: 1px solid theme('colors.ink');
+    border-radius: 8px;
+    box-shadow: 0 8px 28px rgba(20, 35, 59, 0.18);
+  }
+
+  .frame {
+    inset: 0;
     border: 0;
   }
 
@@ -240,24 +326,105 @@
   .notes,
   .title,
   .overlay,
+  .rail,
   .loading {
     display: none;
   }
 
-  .frame {
+  .cardButton {
+    position: absolute;
     inset: 0;
-    border: 0;
+    z-index: 3;
+    display: block;
+    width: 100%;
+    border-radius: 8px;
   }
 
-  /* Multiply drops the white paper, leaving faint ink on the page colour */
-  .gl.shown {
-    opacity: 0.22;
-    mix-blend-mode: multiply;
+  .cardButton:focus-visible {
+    outline: 2px solid theme('colors.dim');
+    outline-offset: 2px;
+  }
+
+  .cardChip {
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid theme('colors.rule');
+    border-radius: 999px;
+    background: #fff;
+    font-family: var(--font-barlow-cond), sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: theme('colors.ink');
+  }
+
+  /* Opened: the full sheet over the page, under the header */
+  .open .drawing {
+    top: var(--header);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    aspect-ratio: auto;
+    padding: 8px;
+    background: theme('colors.paper');
+  }
+
+  .open .sheet {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .open .cardButton {
+    display: none;
+  }
+
+  .open .overlay,
+  .open .rail,
+  .open .close {
+    display: block;
+  }
+
+  .open .rail {
+    top: 10px;
+    left: 10px;
+    right: auto;
+    align-items: flex-start;
+  }
+
+  .open .title {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: auto;
+    font-size: 0.72rem;
+  }
+
+  .open .titleName,
+  .open .titleWide,
+  .open .title > div:nth-last-child(-n + 3) {
+    display: none;
+  }
+
+  .open .titleStep {
+    grid-column: auto;
+  }
+
+  .close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 4;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid theme('colors.ink');
+    border-radius: 999px;
+    background: #fff;
+    font-family: var(--font-barlow-semi), sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
   }
 
   .text {
-    position: relative;
-    z-index: 1;
     padding: 0 1.25rem;
   }
 }

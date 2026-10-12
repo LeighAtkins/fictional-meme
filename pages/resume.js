@@ -132,7 +132,7 @@ export default function Resume() {
 
       <main id="top">
         <SofaAssembly>
-          <section data-step="0" className="pb-16 pt-12 sm:pt-16 lg:min-h-[calc(100vh-57px)] lg:pb-24 lg:pt-20">
+          <section data-step="0" data-label="Introduction" className="pb-16 pt-12 sm:pt-16 lg:min-h-[calc(100vh-57px)] lg:pb-24 lg:pt-20">
             <h1 className="font-display text-[clamp(2.4rem,3.9vw,3.6rem)] font-semibold leading-[0.98] tracking-[-0.01em]">
               Software for sofas, parcels, floor plans and fairways.
             </h1>
@@ -148,15 +148,18 @@ export default function Resume() {
               </a>
             </div>
             <p className="mt-10 max-w-[30rem] text-base text-muted">
-              The drawing is SofaPaint’s own sofa model. It goes together as you scroll, one part per section.
+              The drawing is SofaPaint’s own sofa model. It goes together as you scroll, one part per section; pick a numbered step to jump to it.
             </p>
           </section>
 
           <div id="work" className="border-t border-ink">
             <h2 className="pt-10 font-display text-2xl font-semibold text-muted">Recent work</h2>
             {projects.map((project, i) => (
-              <article key={project.id} id={project.id} data-step={i + 1} className="border-b border-rule py-12 last:border-b-0 sm:py-14">
-                <h3 className="font-display text-4xl font-semibold leading-none">{project.name}</h3>
+              <article key={project.id} id={project.id} data-step={i + 1} data-label={project.name} className="border-b border-rule py-12 last:border-b-0 sm:py-14">
+                <h3 className="flex items-center gap-3 font-display text-4xl font-semibold leading-none">
+                  <span className="balloon" aria-hidden="true">{i + 2}</span>
+                  {project.name}
+                </h3>
                 <p className="mt-2 font-label text-base font-medium text-muted">{project.status}</p>
                 <p className="mt-2 font-display text-xl font-medium text-dim">{project.tagline}</p>
                 <div className="mt-6">
@@ -188,8 +191,9 @@ export default function Resume() {
             ))}
           </div>
 
-          <section data-step={projects.length + 1} aria-labelledby="other-heading" className="border-t border-ink py-12 sm:py-14 lg:min-h-[70vh]">
-            <h2 id="other-heading" className="font-display text-2xl font-semibold text-muted">
+          <section data-step={projects.length + 1} data-label="Earlier projects" aria-labelledby="other-heading" className="border-t border-ink py-12 sm:py-14 lg:min-h-[70vh]">
+            <h2 id="other-heading" className="flex items-center gap-3 font-display text-2xl font-semibold text-muted">
+              <span className="balloon" aria-hidden="true">{projects.length + 2}</span>
               Earlier projects
             </h2>
             <ul className="mt-5 border-t border-rule">
@@ -211,8 +215,9 @@ export default function Resume() {
             </ul>
           </section>
 
-          <section id="about" data-step={projects.length + 2} aria-labelledby="about-heading" className="border-t border-ink py-12 sm:py-14 lg:min-h-[100vh]">
-            <h2 id="about-heading" className="font-display text-2xl font-semibold text-muted">
+          <section id="about" data-step={projects.length + 2} data-label="About" aria-labelledby="about-heading" className="border-t border-ink py-12 sm:py-14 lg:min-h-[100vh]">
+            <h2 id="about-heading" className="flex items-center gap-3 font-display text-2xl font-semibold text-muted">
+              <span className="balloon" aria-hidden="true">{projects.length + 3}</span>
               About
             </h2>
             <div className="mt-6 grid gap-6 sm:grid-cols-[9rem_1fr]">

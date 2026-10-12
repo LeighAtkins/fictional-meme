@@ -30,6 +30,10 @@ export default function SofaAssembly({ children }) {
   const [step, setStep] = useState(0)
   const [facts, setFacts] = useState(null)
   const [state, setState] = useState('loading')
+  const [labels, setLabels] = useState([])
+  // On phones the drawing is a small card that opens into the full sheet
+  const [open, setOpen] = useState(false)
+  const jump = useRef(() => {})
 
   useEffect(() => {
     let cancelled = false
@@ -46,7 +50,7 @@ export default function SofaAssembly({ children }) {
       const y = window.scrollY
       metrics.current.sections = [...layoutRef.current.querySelectorAll('[data-step]')].map((el) => {
         const r = el.getBoundingClientRect()
-        return { top: r.top + y, h: Math.max(1, r.height) }
+        return { top: r.top + y, h: Math.max(1, r.height), label: el.dataset.label }
       })
       api.current?.resize(rect.width, rect.height)
     }
@@ -68,6 +72,15 @@ export default function SofaAssembly({ children }) {
       }
       api.current.setTarget(t)
     }
+    // A numbered step scrolls to its section, a little past the point where
+    // its parts land, and the drawing builds (or unbuilds) on the way there
+    jump.current = (k) => {
+      const sec = metrics.current.sections[k]
+      if (!sec) return
+      const top = sec.top - metrics.current.anchor + (k === 0 ? 0 : Math.min(sec.h * 0.32, 420))
+      window.scrollTo({ top: Math.max(0, top), behavior: reduced ? 'auto' : 'smooth' })
+    }
+
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update)
     }
@@ -96,6 +109,7 @@ export default function SofaAssembly({ children }) {
         setFacts(a.facts)
         measure()
         update()
+        setLabels(metrics.current.sections.map((sec) => sec.label))
         ro.observe(layoutRef.current)
         ro.observe(draw)
         io.observe(draw)
@@ -134,27 +148,72 @@ export default function SofaAssembly({ children }) {
             ? `${facts.parts} parts, ${facts.fabric}. Every dimension and check on this sheet comes from the model.`
             : '')
 
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  const choose = (k) => {
+    jump.current(k)
+  }
+
   return (
-    <div ref={layoutRef} className={`${s.layout} ${state === 'failed' ? s.flat : ''}`}>
-      <div ref={drawRef} className={s.drawing} aria-hidden="true">
+    <div ref={layoutRef} className={`${s.layout} ${state === 'failed' ? s.flat : ''} ${open ? s.open : ''}`}>
+      <div ref={drawRef} className={s.drawing}>
+        {/* The card on phones: the whole drawing is the button that opens it */}
+        <button type="button" className={s.cardButton} onClick={() => setOpen(true)} aria-label={`Open the assembly drawing, sheet ${step + 1} of ${STEPS.length}: ${STEPS[step]}`}>
+          <span className={s.cardChip}>
+            {step + 1}/{STEPS.length} · {STEPS[step]}
+          </span>
+        </button>
+        <button type="button" className={s.close} onClick={() => setOpen(false)}>
+          Close
+        </button>
         <div className={s.sheet}>
           <div className={s.zonesTop}>{ZONES_X.map((z) => <span key={z}>{z}</span>)}</div>
           <div className={s.zonesBottom}>{ZONES_X.map((z) => <span key={z}>{z}</span>)}</div>
           <div className={s.zonesLeft}>{ZONES_Y.map((z) => <span key={z}>{z}</span>)}</div>
           <div className={s.zonesRight}>{ZONES_Y.map((z) => <span key={z}>{z}</span>)}</div>
           <div className={s.frame}>
-            <canvas ref={glRef} className={`${s.gl} ${state === 'ready' ? s.shown : ''}`} />
-            <canvas ref={overlayRef} className={`${s.overlay} ${state === 'ready' ? s.shown : ''}`} />
+            <canvas ref={glRef} aria-hidden="true" className={`${s.gl} ${state === 'ready' ? s.shown : ''}`} />
+            <canvas ref={overlayRef} aria-hidden="true" className={`${s.overlay} ${state === 'ready' ? s.shown : ''}`} />
+
+            {labels.length > 0 && (
+              <nav className={s.rail} aria-label="Assembly steps">
+                <ol>
+                  {labels.map((label, k) => (
+                    <li key={k}>
+                      <button
+                        type="button"
+                        onClick={() => choose(k)}
+                        aria-current={k === step ? 'step' : undefined}
+                        className={`${s.balloon} ${k < step ? s.done : ''} ${k === step ? s.current : ''}`}
+                        title={`${k + 1}. ${STEPS[k]}: ${label}`}
+                        aria-label={`Step ${k + 1}, ${STEPS[k]}: go to ${label}`}
+                      >
+                        {k + 1}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+                <p className={s.railLabel}>
+                  {STEPS[step]}
+                  {labels[step] ? <span> · {labels[step]}</span> : null}
+                </p>
+              </nav>
+            )}
             {state === 'loading' && <p className={s.loading}>Plotting the drawing…</p>}
 
-            <div className={s.notes}>
+            <div className={s.notes} aria-hidden="true">
               <p className={s.notesHead}>Notes</p>
               <p key={step} className={s.note}>
                 {note}
               </p>
             </div>
 
-            <dl className={s.title}>
+            <dl className={s.title} aria-hidden="true">
               <div className={s.titleName}>
                 <dt className="sr-only">Drawn by</dt>
                 <dd>
