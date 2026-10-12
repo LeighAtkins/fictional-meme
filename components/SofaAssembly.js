@@ -41,10 +41,8 @@ export default function SofaAssembly({ children }) {
       const header = document.querySelector('[data-site-header]')
       const headerH = header ? header.getBoundingClientRect().height : 0
       const rect = draw.getBoundingClientRect()
-      const stacked = window.matchMedia('(max-width: 1023px)').matches
       // The line that decides progress: the middle of the reading area
-      const top = stacked ? headerH + rect.height : headerH
-      metrics.current.anchor = top + (window.innerHeight - top) * (stacked ? 0.42 : 0.5)
+      metrics.current.anchor = headerH + (window.innerHeight - headerH) * 0.5
       const y = window.scrollY
       metrics.current.sections = [...layoutRef.current.querySelectorAll('[data-step]')].map((el) => {
         const r = el.getBoundingClientRect()

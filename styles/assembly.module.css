@@ -210,51 +210,54 @@
   color: theme('colors.dim');
 }
 
-/* Narrow screens: the sheet becomes a band pinned under the header */
+/* Narrow screens: the drawing sits behind the text as a faint backdrop, with
+   no dimensions or sheet furniture, so the résumé gets the whole screen */
 @media (max-width: 1023px) {
   .layout {
     display: block;
   }
 
   .drawing {
-    z-index: 20;
-    height: 42vh;
-    height: 42svh;
-    padding: 6px;
-    background: theme('colors.paper');
-    border-bottom: 1px solid theme('colors.rule');
+    z-index: 0;
+    height: calc(100vh - var(--header));
+    height: calc(100svh - var(--header));
+    /* Pinned, but takes no room: the text scrolls over it */
+    margin-bottom: calc(-100vh + var(--header));
+    margin-bottom: calc(-100svh + var(--header));
+    padding: 0;
+    pointer-events: none;
+  }
+
+  .sheet {
+    background: transparent;
+    border: 0;
   }
 
   .zonesTop,
   .zonesBottom,
   .zonesLeft,
   .zonesRight,
-  .notes {
+  .notes,
+  .title,
+  .overlay,
+  .loading {
     display: none;
   }
 
   .frame {
     inset: 0;
-    border-width: 1px;
+    border: 0;
   }
 
-  .title {
-    grid-template-columns: auto auto auto;
-    width: auto;
-    font-size: 0.72rem;
-  }
-
-  .titleName,
-  .titleWide,
-  .title > div:nth-last-child(-n + 3) {
-    display: none;
-  }
-
-  .titleStep {
-    grid-column: auto;
+  /* Multiply drops the white paper, leaving faint ink on the page colour */
+  .gl.shown {
+    opacity: 0.22;
+    mix-blend-mode: multiply;
   }
 
   .text {
+    position: relative;
+    z-index: 1;
     padding: 0 1.25rem;
   }
 }
