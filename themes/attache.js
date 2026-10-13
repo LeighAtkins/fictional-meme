@@ -459,7 +459,7 @@ export default function Attache() {
                   <strong>Today’s course at ThreeWood</strong>
                   <small>Rare. Everyone gets the same one today.</small>
                 </span>
-                <a className={s.cmd} href="https://threewood.vercel.app" target="_blank" rel="noopener noreferrer">
+                <a className={s.cmd} href="https://threewood.app" target="_blank" rel="noopener noreferrer">
                   Play
                 </a>
               </li>
